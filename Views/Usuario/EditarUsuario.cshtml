@@ -1,0 +1,48 @@
+﻿@model TesteUGBMVC.Models.UsuarioViewModel
+
+<form class="was-validated" method="post" asp-controller="Usuario" asp-action="EditarUsuario">
+
+    <input asp-for="MatriculaUsuario" type="text" class="form-control" placeholder="Digite sua matrícula">
+
+    <input asp-for="NomeCompletoUsuario" type="text" class="form-control" placeholder="Digite seu Nome completo">
+
+    <input asp-for="EmailUsuario" type="text" class="form-control" placeholder="Digite seu email">
+
+    <input asp-for="UsuarioLogin" type="text" class="form-control" placeholder="Digite seu usuário">
+
+    <input asp-for="DepartamentoFuncionario" type="text" class="form-control" placeholder="Digite seu setor">
+
+    @*<select class="form-control mb-3" asp-for="Perfil" asp-items="Html.GetEnumSelectList<Perfil>()"></select>*@
+
+    <input type='submit' value='Voltar' asp-controller="Usuario" asp-action="ListaUsuarios">
+    <input class="submit" type="submit" name="commit" value="Salvar">
+
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('keyup', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+
+    </script>
+}

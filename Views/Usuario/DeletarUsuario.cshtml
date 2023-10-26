@@ -1,0 +1,8 @@
+﻿@model TesteUGBMVC.Models.UsuarioViewModel
+
+<h3 class="display-5 text-center">Deseja realmente excluir o Usuário <b>@Model.UsuarioLogin</b>?</h3>
+<br />
+<form method="post" asp-controller="Usuario" asp-action="DeletarUsuario" asp-route-id="@Model.Id">
+    <button type="submit" class="btn btn-danger btn-block">Confirmar</button>
+    <a class="btn btn-primary btn-block" asp-controller="Usuario" asp-action="ListaUsuarios">Cancelar</a>
+</form>

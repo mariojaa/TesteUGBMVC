@@ -1,0 +1,60 @@
+﻿@model TesteUGBMVC.Models.UsuarioViewModel
+
+<h1 class="display-4 text-center">Cadastro de Usuários</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form asp-controller="Usuario" asp-action="CriarUsuario" method="post" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    Matrícula
+                    <label class="control-label" placeholder="Digite a matrícula"></label>
+                    <input asp-for="MatriculaUsuario" class="form-control" required>
+                    <span asp-validation-for="MatriculaUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Nome Completo
+                    <label class="control-label" placeholder="Digite o nome completo"></label>
+                    <input asp-for="NomeCompletoUsuario" class="form-control" required>
+                    <span asp-validation-for="NomeCompletoUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Email
+                    <label class="control-label" placeholder="Digite seu email"></label>
+                    <input asp-for="EmailUsuario" class="form-control" required>
+                    <span asp-validation-for="EmailUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Usuário
+                    <label class="control-label" placeholder="Digite seu usuário"></label>
+                    <input asp-for="UsuarioLogin" class="form-control" required>
+                    <span asp-validation-for="UsuarioLogin" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Setor
+                    <label class="control-label" placeholder="Digite seu setor"></label>
+                    <input asp-for="DepartamentoFuncionario" class="form-control" required>
+                    <span asp-validation-for="DepartamentoFuncionario" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center fs-6">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    <a asp-controller="Usuario" asp-action="ListaUsuarios" class="btn btn-secondary">Voltar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}
