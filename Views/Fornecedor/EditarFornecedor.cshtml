@@ -1,0 +1,58 @@
+﻿@model TesteUGBMVC.Models.FornecedorViewModel
+
+<form class="was-validated" method="post" asp-controller="Fornecedor" asp-action="EditarFornecedor">
+
+    <input asp-for="NomeEmpresaFornecedora" type="text" class="form-control" placeholder="Digite o nome da empresa">
+
+    <input asp-for="EnderecoFornecedor" type="text" class="form-control" placeholder="Digite o endereço (Rua/Av)">
+
+    <input asp-for="NumeroEnderecoFornecedor" type="text" class="form-control" placeholder="Digite o número do endereço">
+
+    <input asp-for="BairroEnderecoFornecedor" type="text" class="form-control" placeholder="Digite o bairro">
+
+    <input asp-for="CidadeEnderecoFornecedor" type="text" class="form-control" placeholder="Digite a cidade">
+
+    <input asp-for="EstadoEnderecoFornecedor" type="text" class="form-control" placeholder="Digite o estado">
+
+    <input asp-for="PaisEnderecoFornecedor" type="text" class="form-control" placeholder="Digite o país">
+
+    <input asp-for="EmailFornecedor" type="text" class="form-control" placeholder="Digite email da empresa">
+
+    <input asp-for="CNPJFornecedor" type="text" class="form-control" placeholder="Digite o CNPJ da empresa">
+
+    <input asp-for="InscricaoEstadualEMunicipalFornecedor" type="text" class="form-control" placeholder="Digite a inscrição Estadual ou Municipal">
+
+    @*<select class="form-control mb-3" asp-for="Perfil" asp-items="Html.GetEnumSelectList<Perfil>()"></select>*@
+
+    <input type='submit' value='Voltar' asp-controller="Fornecedor" asp-action="ListaFornecedores">
+    <input class="submit" type="submit" name="commit" value="Salvar">
+
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('keyup', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+
+    </script>
+}

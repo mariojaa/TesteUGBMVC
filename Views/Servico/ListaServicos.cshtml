@@ -1,0 +1,113 @@
+﻿@model List<ServicoViewModel>
+
+<h1 class="text-center display-4">Lista de Serviços</h1>
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+<div class="container mt-3">
+    <input class="form-control" id="buscador" type="search" placeholder="Buscar..." aria-controls="table-servicos">
+</div>
+
+<a title="Adicionar Serviço" class="btn Adc-Servico" asp-controller="Servico" asp-action="CriarServico">Adicionar Serviço</a>
+
+@if (Model.Any())
+{
+    <table id="table-servicos" class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Nome do Serviço</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Prazo de Entrega</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NomeDoServico</td>
+                    <td>@item.DescricaoDoServico</td>
+                    <td>@item.PrazoEntregaPadrao</td>
+                    <td class="align-items-baseline">
+                        <a title="Editar" class="btnEditar" asp-route-id="@item.Id" asp-controller="Servico" asp-action="EditarServico">Editar</a>
+                        <a href="#" class="btnDeletar" data-value="@item.Id" title="Excluir">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="conteudomodal"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info" role="alert">Nenhum serviço encontrado.</div>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".btnDeletar").click(function () {
+                var id = $(this).data("value");
+                $("#conteudomodal").load("/Servico/DeletarServico/" + id,
+                    function () {
+                        $('#exampleModal').modal("show");
+                    }
+                );
+            });
+
+            $('#table-servicos').DataTable({
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "pageLength": 10,
+                "info": false,
+                "lengthChange": false,
+                "dom": 'lrtip',
+                "oLanguage": {
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sSearch": "Pesquisa",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                }
+            });
+
+            var oTable = $('#table-servicos').DataTable();
+            $('#buscador').on("input", function () {
+                oTable.search($(this).val()).draw();
+            });
+        });
+    </script>
+}

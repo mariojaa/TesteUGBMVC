@@ -1,0 +1,8 @@
+﻿@model TesteUGBMVC.Models.ServicoViewModel
+
+<h3 class="display-5 text-center">Deseja realmente excluir o serviço? <b>@Model.NomeDoServico</b>?</h3>
+<br />
+<form method="post" asp-controller="Servico" asp-action="DeletarServico" asp-route-id="@Model.Id">
+    <button type="submit" class="btn btn-danger btn-block">Confirmar</button>
+    <a class="btn btn-primary btn-block" asp-controller="Servico" asp-action="ListaServicos">Cancelar</a>
+</form>

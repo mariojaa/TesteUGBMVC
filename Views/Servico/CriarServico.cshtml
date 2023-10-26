@@ -1,0 +1,46 @@
+﻿@model TesteUGBMVC.Models.ServicoViewModel
+
+<h1 class="display-4 text-center">Cadastro de Serviços</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form asp-controller="Servico" asp-action="CriarServico" method="post" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    Nome do Serviço
+                    <label class="control-label" placeholder="Digite a nome do serviço"></label>
+                    <input asp-for="NomeDoServico" class="form-control" required>
+                    <span asp-validation-for="NomeDoServico" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Descrição do Serviço
+                    <label class="control-label" placeholder="Descreva o serviço"></label>
+                    <input asp-for="DescricaoDoServico" class="form-control" required>
+                    <span asp-validation-for="DescricaoDoServico" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Prazo para Entrega
+                    <label class="control-label" placeholder="Digite o prazo de entrega do serviço"></label>
+                    <input asp-for="PrazoEntregaPadrao" class="form-control" required>
+                    <span asp-validation-for="PrazoEntregaPadrao" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center fs-6">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    <a asp-controller="Servico" asp-action="ListaServico" class="btn btn-secondary">Voltar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}
