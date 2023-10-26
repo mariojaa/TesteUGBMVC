@@ -40,7 +40,7 @@ namespace TesteUGBMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult CrairProduto()
+        public IActionResult CriarProduto()
         {
             return View();
         }

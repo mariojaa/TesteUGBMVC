@@ -1,0 +1,88 @@
+﻿@model TesteUGBMVC.Models.ProdutoViewModel
+
+<h1 class="display-4 text-center">Cadastro de Produtos</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form asp-controller="Produto" asp-action="CriarProduto" method="post" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    Nome do Produto
+                    <label class="control-label" placeholder="Digite a nome do produto"></label>
+                    <input asp-for="NomeProduto" class="form-control" required>
+                    <span asp-validation-for="NomeProduto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Número do Pedido
+                    <label class="control-label" placeholder="Digite o número do pedido"></label>
+                    <input asp-for="NumeroPedidoProduto" class="form-control" required>
+                    <span asp-validation-for="NumeroPedidoProduto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Fornecedor
+                    <label class="control-label" placeholder="Digite o fornecedor"></label>
+                    <input asp-for="FornecedorProduto" class="form-control" required>
+                    <span asp-validation-for="FornecedorProduto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Quantidade de Peças
+                    <label class="control-label" placeholder="Digite a quantidade de peças recebidas"></label>
+                    <input asp-for="QuantidadeEntradaProduto" class="form-control" required>
+                    <span asp-validation-for="QuantidadeEntradaProduto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Setor do Estoque
+                    <label class="control-label" placeholder="Digite o setor de estoque"></label>
+                    <input asp-for="SetorDeDeposito" class="form-control" required>
+                    <span asp-validation-for="SetorDeDeposito" class="text-danger"></span>
+                </div>
+
+                @*<div class="form-group">
+                    Data do Cadastro
+                    <label class="control-label"></label>
+                    <input asp-for="DataCadastroProduto" class="form-control" required>
+                    <span asp-validation-for="DataCadastroProduto" class="text-danger"></span>
+                </div>*@
+
+                <div class="form-group">
+                    Tipo de Produto
+                    <label class="control-label" placeholder="Digite o tipo de produto"></label>
+                    <input asp-for="TipoDoProdutoUnitarioOuPacote" class="form-control" required> @*Mudar para ENUM*@
+                    <span asp-validation-for="TipoDoProdutoUnitarioOuPacote" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Nota Fiscal
+                    <label class="control-label" placeholder="Digite a nota fiscal"></label>
+                    <input asp-for="NumeroNotaFiscalProduto" class="form-control" required>
+                    <span asp-validation-for="NumeroNotaFiscalProduto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    Código de Barras (EAN)
+                    <label class="control-label" placeholder="Digite o código de barras"></label>
+                    <input asp-for="CodigoEAN" class="form-control" required>
+                    <span asp-validation-for="CodigoEAN" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center fs-6">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    <a asp-controller="Produto" asp-action="ListaProdutos" class="btn btn-secondary">Voltar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}

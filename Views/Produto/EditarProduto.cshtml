@@ -1,0 +1,54 @@
+﻿@model TesteUGBMVC.Models.ProdutoViewModel
+
+<form class="was-validated" method="post" asp-controller="Produto" asp-action="EditarProduto">
+
+    <input asp-for="NomeProduto" type="text" class="form-control" placeholder="Digite o nome do produto">
+
+    <input asp-for="NumeroPedidoProduto" type="text" class="form-control" placeholder="Digite o número do pedido">
+
+    <input asp-for="FornecedorProduto" type="text" class="form-control" placeholder="Digite o fornecedor">
+
+    <input asp-for="QuantidadeEntradaProduto" type="text" class="form-control" placeholder="Digite a quantidade de peças de entrada">
+
+    <input asp-for="SetorDeDeposito" type="text" class="form-control" placeholder="Digite o setor de deposito">
+
+    <input asp-for="TipoDoProdutoUnitarioOuPacote" type="text" class="form-control" placeholder="Digite o tipo de produto">
+
+    <input asp-for="NumeroNotaFiscalProduto" type="text" class="form-control" placeholder="Digite o número da nosta fiscal">
+
+    <input asp-for="CodigoEAN" type="text" class="form-control" placeholder="Digite o código de barras (EAN)">
+
+    @*<select class="form-control mb-3" asp-for="Perfil" asp-items="Html.GetEnumSelectList<Perfil>()"></select>*@
+
+    <input type='submit' value='Voltar' asp-controller="Produto" asp-action="ListaProdutos">
+    <input class="submit" type="submit" name="commit" value="Salvar">
+
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('keyup', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+
+    </script>
+}
