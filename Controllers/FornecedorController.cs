@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using TesteUGB.Data;
+using System.Threading.Tasks;
 using TesteUGB.Models;
 using TesteUGBMVC.Models;
-
 
 namespace TesteUGBMVC.Controllers
 {
@@ -56,7 +58,7 @@ namespace TesteUGBMVC.Controllers
                     var fornecedorModel = new FornecedorModel
                     {
                         NomeEmpresaFornecedora = novoFornecedor.NomeEmpresaFornecedora,
-                        EnderecoFornecedor = novoFornecedor.NomeEmpresaFornecedora,
+                        EnderecoFornecedor = novoFornecedor.EnderecoFornecedor, // Corrigido aqui
                         NumeroEnderecoFornecedor = novoFornecedor.NumeroEnderecoFornecedor,
                         BairroEnderecoFornecedor = novoFornecedor.BairroEnderecoFornecedor,
                         CidadeEnderecoFornecedor = novoFornecedor.CidadeEnderecoFornecedor,
@@ -73,7 +75,7 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(novoFornecedorJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content); //Solicitaçõa Post
+                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -85,7 +87,7 @@ namespace TesteUGBMVC.Controllers
                         ModelState.AddModelError("", "Erro ao criar o fornecedor na API.");
                     }
                 }
-                catch (Exception ex)
+                catch (HttpRequestException ex) // Corrigido aqui
                 {
                     ModelState.AddModelError("", "Erro ao criar o fornecedor: " + ex.Message);
                 }
@@ -99,7 +101,7 @@ namespace TesteUGBMVC.Controllers
         {
             try
             {
-                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}"); // solicitação para delete por ID
+                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -110,19 +112,20 @@ namespace TesteUGBMVC.Controllers
                     ModelState.AddModelError("", "Erro ao excluir o fornecedor na API.");
                 }
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
                 ModelState.AddModelError("", "Erro ao excluir o fornecedor: " + ex.Message);
             }
 
             return RedirectToAction("ListaFornecedores");
         }
+
         [HttpGet]
         public async Task<IActionResult> EditarFornecedor(int id)
         {
             try
             {
-                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}"); // solicitação para obter um usuário por ID
+                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -136,7 +139,7 @@ namespace TesteUGBMVC.Controllers
                     return View();
                 }
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
                 ModelState.AddModelError("", "Erro ao obter o fornecedor: " + ex.Message);
                 return View();
@@ -171,7 +174,7 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(fornecedorJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{fornecedorModel.Id}", content); // Solicitação para editar o usuário por ID
+                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{fornecedorModel.Id}", content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -183,7 +186,7 @@ namespace TesteUGBMVC.Controllers
                         ModelState.AddModelError("", "Erro ao editar o fornecedor na API.");
                     }
                 }
-                catch (Exception ex)
+                catch (HttpRequestException ex)
                 {
                     ModelState.AddModelError("", "Erro ao editar o fornecedor: " + ex.Message);
                 }

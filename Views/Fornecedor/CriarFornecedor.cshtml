@@ -9,71 +9,61 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
-                    Nome da Empresa
-                    <label class="control-label" placeholder="Digite o nome da empresa"></label>
+                    <label for="NomeEmpresaFornecedora">Nome da Empresa</label>
                     <input asp-for="NomeEmpresaFornecedora" class="form-control" required>
                     <span asp-validation-for="NomeEmpresaFornecedora" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    Endereço
-                    <label class="control-label" placeholder="Digite o endereço"></label>
+                    <label for="EnderecoFornecedor">Endereço</label>
                     <input asp-for="EnderecoFornecedor" class="form-control" required>
                     <span asp-validation-for="EnderecoFornecedor" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    Número
-                    <label class="control-label" placeholder="Digite o número do endereço"></label>
+                    <label for="NumeroEnderecoFornecedor">Número</label>
                     <input asp-for="NumeroEnderecoFornecedor" class="form-control" required>
                     <span asp-validation-for="NumeroEnderecoFornecedor" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    Bairro
-                    <label class="control-label" placeholder="Digite o bairro"></label>
+                    <label for="BairroEnderecoFornecedor">Bairro</label>
                     <input asp-for="BairroEnderecoFornecedor" class="form-control" required>
                     <span asp-validation-for="BairroEnderecoFornecedor" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    Cidade
-                    <label class="control-label" placeholder="Digite a cidade"></label>
+                    <label for="CidadeEnderecoFornecedor">Cidade</label>
                     <input asp-for="CidadeEnderecoFornecedor" class="form-control" required>
                     <span asp-validation-for="CidadeEnderecoFornecedor" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
-                    Estado
-                    <label class="control-label" placeholder="Digite o Estado"></label>
+                <div class "form-group">
+                    <label for="EstadoEnderecoFornecedor">Estado</label>
                     <input asp-for="EstadoEnderecoFornecedor" class="form-control" required>
                     <span asp-validation-for="EstadoEnderecoFornecedor" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    País
-                    <label class="control-label" placeholder="Digite o país"></label>
+                    <label for="PaisEnderecoFornecedor">País</label>
                     <input asp-for="PaisEnderecoFornecedor" class="form-control" required>
                     <span asp-validation-for="PaisEnderecoFornecedor" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    Email
-                    <label class="control-label" placeholder="Digite o email da empresa"></label>
+                    <label for="EmailFornecedor">Email</label>
                     <input asp-for="EmailFornecedor" class="form-control" required>
                     <span asp-validation-for="EmailFornecedor" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    CNPJ
-                    <label class="control-label" placeholder="Digite o CNPJ"></label>
+                    <label for="CNPJFornecedor">CNPJ</label>
                     <input asp-for="CNPJFornecedor" class="form-control" required>
                     <span asp-validation-for="CNPJFornecedor" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    Inscrição Estadual / Municipal
-                    <label class="control-label" placeholder="Digite o número da inscrição"></label>
+                    <label for="InscricaoEstadualEMunicipalFornecedor">Inscrição Estadual / Municipal</label>
                     <input asp-for="InscricaoEstadualEMunicipalFornecedor" class="form-control" required>
                     <span asp-validation-for="InscricaoEstadualEMunicipalFornecedor" class="text-danger"></span>
                 </div>
@@ -88,8 +78,6 @@
 </div>
 
 @section Scripts {
-    
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
 }

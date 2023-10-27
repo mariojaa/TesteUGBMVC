@@ -13,5 +13,6 @@
         public string EmailFornecedor { get; set; } //Colocar Formato padrão de Email
         public long CNPJFornecedor { get; set; } //Colocar Formato padrão NPJ para cadastro
         public long InscricaoEstadualEMunicipalFornecedor { get; set; } //Colocar Formato padrão da inscrição
+        public List<ServicoViewModel>? Servicios { get; set; }
     }
 }
