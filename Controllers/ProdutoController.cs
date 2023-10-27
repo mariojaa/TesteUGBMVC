@@ -57,7 +57,8 @@ namespace TesteUGBMVC.Controllers
                         NomeProduto = novoProduto.NomeProduto,
                         NumeroPedidoProduto = novoProduto.NumeroPedidoProduto,
                         FornecedorProduto = novoProduto.FornecedorProduto,
-                        QuantidadeEmEstoque = novoProduto.QuantidadeEmEstoque,
+                        QuantidadeEntradaProduto = novoProduto.QuantidadeEntradaProduto,
+                        QuantidadeEmEstoque = novoProduto.QuantidadeEmEstoque + novoProduto.QuantidadeEntradaProduto, // Atualize a quantidade em estoque
                         QuantidadeMinimaEmEstoque = novoProduto.QuantidadeMinimaEmEstoque,
                         SetorDeDeposito = novoProduto.SetorDeDeposito,
                         DataCadastroProduto = novoProduto.DataCadastroProduto,
@@ -74,7 +75,7 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(novoProdutoJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content); //Solicitaçõa Post
+                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content); // Solicitaçõa Post
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -95,7 +96,7 @@ namespace TesteUGBMVC.Controllers
             return View(novoProduto);
         }
 
-        [HttpGet]
+[HttpGet]
         public async Task<IActionResult> DeletarProduto(int id)
         {
             try
@@ -157,6 +158,7 @@ namespace TesteUGBMVC.Controllers
                         NomeProduto = produtoEditado.NomeProduto,
                         NumeroPedidoProduto = produtoEditado.NumeroPedidoProduto,
                         FornecedorProduto = produtoEditado.FornecedorProduto,
+                        QuantidadeEntradaProduto = produtoEditado.QuantidadeEntradaProduto,
                         QuantidadeEmEstoque = produtoEditado.QuantidadeEmEstoque,
                         QuantidadeMinimaEmEstoque = produtoEditado.QuantidadeMinimaEmEstoque,
                         SetorDeDeposito = produtoEditado.SetorDeDeposito,

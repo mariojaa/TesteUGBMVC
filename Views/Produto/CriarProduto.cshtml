@@ -30,6 +30,13 @@
                 </div>
 
                 <div class="form-group">
+                    Quantidade em Estoque
+                    <label class="control-label" placeholder="Digite a quantidade de peças recebidas"></label>
+                    <input asp-for="QuantidadeEmEstoque" class="form-control" required>
+                    <span asp-validation-for="QuantidadeEmEstoque" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
                     Quantidade de Peças
                     <label class="control-label" placeholder="Digite a quantidade de peças recebidas"></label>
                     <input asp-for="QuantidadeEntradaProduto" class="form-control" required>

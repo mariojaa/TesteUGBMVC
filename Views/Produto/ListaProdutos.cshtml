@@ -1,6 +1,6 @@
 ﻿@model List<ProdutoViewModel>
 
-<h1 class="text-center display-4">Lista de Produtos</h1>
+<h1 class="text-center display-4">Lista de Produtos em Estoque</h1>
 
 @if (TempData["MensagemSucesso"] != null)
 {
@@ -20,7 +20,7 @@
     <input class="form-control" id="buscador" type="search" placeholder="Buscar..." aria-controls="table-produtos">
 </div>
 
-<a title="Adicionar Produto" class="btn Adc-Produto" asp-controller="Produto" asp-action="CriarProduto">Adicionar Produto</a>
+<a title="Adicionar Produto" class="btn Adc-Produto" asp-controller="Produto" asp-action="CriarProduto">Cadastrar Produto</a>
 
 @if (Model.Any())
 {
@@ -67,7 +67,7 @@
 }
 else
 {
-    <div class="alert alert-info" role="alert">Nenhum usuário encontrado.</div>
+    <div class="alert alert-info" role="alert">Nenhum produto encontrado.</div>
 }
 
 

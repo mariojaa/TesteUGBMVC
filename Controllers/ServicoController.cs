@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using TesteUGB.Data;
+using System.Threading.Tasks;
 using TesteUGB.Models;
 using TesteUGBMVC.Models;
-
 
 namespace TesteUGBMVC.Controllers
 {
@@ -66,7 +68,7 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(novoServicoJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content); //Solicitaçõa Post
+                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -92,7 +94,7 @@ namespace TesteUGBMVC.Controllers
         {
             try
             {
-                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}"); // solicitação para delete por ID
+                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -110,18 +112,19 @@ namespace TesteUGBMVC.Controllers
 
             return RedirectToAction("ListaServicos");
         }
+
         [HttpGet]
         public async Task<IActionResult> EditarServico(int id)
         {
             try
             {
-                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}"); // solicitação para obter um usuário por ID
+                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    var sericoModel = JsonConvert.DeserializeObject<ServicoViewModel>(content);
-                    return View(sericoModel);
+                    var servicoModel = JsonConvert.DeserializeObject<ServicoViewModel>(content);
+                    return View(servicoModel);
                 }
                 else
                 {
@@ -149,7 +152,6 @@ namespace TesteUGBMVC.Controllers
                         NomeDoServico = servicoEditado.NomeDoServico,
                         DescricaoDoServico = servicoEditado.DescricaoDoServico,
                         PrazoEntregaPadrao = servicoEditado.PrazoEntregaPadrao
-                        
                     };
 
                     var servicoJson = JsonConvert.SerializeObject(servicoModel);
@@ -158,7 +160,7 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(servicoJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{servicoModel.Id}", content); // Solicitação para editar o usuário por ID
+                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{servicoModel.Id}", content);
 
                     if (response.IsSuccessStatusCode)
                     {
