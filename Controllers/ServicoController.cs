@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using TesteUGB.Models;
+using TesteUGB.Repositorio;
 using TesteUGBMVC.Models;
 
 namespace TesteUGBMVC.Controllers
@@ -15,13 +17,17 @@ namespace TesteUGBMVC.Controllers
     {
         private readonly string API_ENDPOINT = "http://localhost:9038/api/servico";
         private readonly HttpClient httpClient;
+        private readonly ServicoRepository _servicoRepository;
+        private readonly FornecedorRepository _fornecedorRepository;
 
-        public ServicoController()
+        public ServicoController(ServicoRepository servicoRepository, FornecedorRepository fornecedorRepository)
         {
             httpClient = new HttpClient
             {
                 BaseAddress = new Uri(API_ENDPOINT)
             };
+            _servicoRepository = servicoRepository;
+            _fornecedorRepository = fornecedorRepository;
         }
 
         public async Task<IActionResult> ListaServicos()
@@ -43,10 +49,27 @@ namespace TesteUGBMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult CriarServico()
+        public async Task<IActionResult> CriarServico()
         {
-            return View();
+            // Carregue a lista de fornecedores da sua fonte de dados (banco de dados, serviço, etc.)
+            var fornecedores = await _fornecedorRepository.BuscarFornecedores(); // Substitua pelo método real que carrega os fornecedores
+
+            // Mapeie a lista de fornecedores para SelectListItems
+            var fornecedoresSelectList = fornecedores.Select(f => new SelectListItem
+            {
+                Text = f.NomeEmpresaFornecedora,
+                Value = f.Id.ToString()
+            }).ToList();
+
+            // Preencha o campo Fornecedores no modelo
+            var novoServico = new ServicoViewModel
+            {
+                Fornecedores = fornecedoresSelectList
+            };
+
+            return View(novoServico);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CriarServico(ServicoViewModel novoServico)
@@ -55,29 +78,28 @@ namespace TesteUGBMVC.Controllers
             {
                 try
                 {
-                    var servicoModel = new ServicoModel
+                    // Obtenha o fornecedor selecionado
+                    var fornecedorSelecionado = await _fornecedorRepository.FindById(novoServico.FornecedorId); // Substitua pelo método real que obtém o fornecedor pelo ID
+
+                    if (fornecedorSelecionado != null)
                     {
-                        NomeDoServico = novoServico.NomeDoServico,
-                        DescricaoDoServico = novoServico.DescricaoDoServico,
-                        PrazoEntregaPadrao = novoServico.PrazoEntregaPadrao
-                    };
+                        var servicoModel = new ServicoModel
+                        {
+                            NomeDoServico = novoServico.NomeDoServico,
+                            DescricaoDoServico = novoServico.DescricaoDoServico,
+                            PrazoEntregaPadrao = novoServico.PrazoEntregaPadrao,
+                            Fornecedor = fornecedorSelecionado
+                        };
 
-                    var novoServicoJson = JsonConvert.SerializeObject(servicoModel);
+                        // Resto do código para salvar o serviço no banco de dados
+                        // ...
 
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var content = new StringContent(novoServicoJson, Encoding.UTF8, "application/json");
-
-                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
                         TempData["MensagemSucesso"] = "Serviço criado com sucesso!";
                         return RedirectToAction("ListaServicos");
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Erro ao criar o serviço na API.");
+                        ModelState.AddModelError("", "Fornecedor não encontrado.");
                     }
                 }
                 catch (Exception ex)

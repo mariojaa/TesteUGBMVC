@@ -10,7 +10,7 @@
 
                 <div class="form-group">
                     Nome do Serviço
-                    <label class="control-label" placeholder="Digite a nome do serviço"></label>
+                    <label class="control-label" placeholder="Digite o nome do serviço"></label>
                     <input asp-for="NomeDoServico" class="form-control" required>
                     <span asp-validation-for="NomeDoServico" class="text-danger"></span>
                 </div>
@@ -29,6 +29,14 @@
                     <span asp-validation-for="PrazoEntregaPadrao" class="text-danger"></span>
                 </div>
 
+                <div class="form-group">
+                    Empresa Fornecedora
+                    <select asp-for="FornecedorId" asp-items="Model.Fornecedores" class="form-control">
+                        <option value="">Selecione a empresa fornecedora</option>
+                    </select>
+                    <span asp-validation-for="FornecedorId" class="text-danger"></span>
+                </div>
+
                 <div class="form-group text-center fs-6">
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
                     <a asp-controller="Servico" asp-action="ListaServico" class="btn btn-secondary">Voltar</a>
@@ -39,8 +47,6 @@
 </div>
 
 @section Scripts {
-    
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
 }
