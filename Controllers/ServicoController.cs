@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace TesteUGBMVC.Controllers
         private readonly HttpClient httpClient;
         private readonly ServicoRepository _servicoRepository;
         private readonly FornecedorRepository _fornecedorRepository;
-        private readonly TesteUGBDbContext _contex;
+        private readonly TesteUGBDbContext _context;
 
         public ServicoController(ServicoRepository servicoRepository, FornecedorRepository fornecedorRepository, TesteUGBDbContext context)
         {
@@ -30,31 +31,14 @@ namespace TesteUGBMVC.Controllers
             };
             _servicoRepository = servicoRepository;
             _fornecedorRepository = fornecedorRepository;
-            _contex = context;
+            _context = context;
         }
 
-        //public async Task<IActionResult> ListaServicos()
-        //{
-        //    List<ServicoViewModel> servicos = null;
-        //    HttpResponseMessage response = await httpClient.GetAsync(API_ENDPOINT);
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        string content = await response.Content.ReadAsStringAsync();
-        //        servicos = JsonConvert.DeserializeObject<List<ServicoViewModel>>(content);
-        //        return View(servicos);
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", "Erro ao processar a solicitação.");
-        //        return View();
-        //    }
-        //}
         public async Task<IActionResult> ListaServicos()
         {
             List<ServicoViewModel> servicos = null;
 
-            var servicosModel = await _servicoRepository.Buscar(); // Certifique-se de que este método carregue os fornecedores
+            var servicosModel = await _servicoRepository.Buscar();
 
             if (servicosModel != null)
             {
@@ -79,17 +63,16 @@ namespace TesteUGBMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CriarServico()
         {
-            // Carregue a lista de fornecedores da sua fonte de dados (banco de dados, serviço, etc.)
-            var fornecedores = await _fornecedorRepository.BuscarFornecedores(); // Substitua pelo método real que carrega os fornecedores
 
-            // Mapeie a lista de fornecedores para SelectListItems
-            var fornecedoresSelectList = fornecedores.Select(f => new SelectListItem
+            var fornecedores = await _fornecedorRepository.BuscarFornecedores();
+
+            var fornecedoresSelectList = fornecedores.Select(f => new SelectListItem //mapeia lista fornecedor
             {
                 Text = f.NomeEmpresaFornecedora,
                 Value = f.Id.ToString()
             }).ToList();
 
-            // Preencha o campo Fornecedores no modelo
+            // popula combobox
             var novoServico = new ServicoViewModel
             {
                 Fornecedores = fornecedoresSelectList
@@ -110,7 +93,7 @@ namespace TesteUGBMVC.Controllers
 
                     if (fornecedorSelecionado != null)
                     {
-                        novoServico.NomeEmpresaFornecedora = fornecedorSelecionado.NomeEmpresaFornecedora; // Preencha o nome da empresa
+                        novoServico.NomeEmpresaFornecedora = fornecedorSelecionado.NomeEmpresaFornecedora;
 
                         var servicoModel = new ServicoModel
                         {
@@ -121,8 +104,8 @@ namespace TesteUGBMVC.Controllers
                             NomeEmpresaFornecedora = fornecedorSelecionado.NomeEmpresaFornecedora
                         };
 
-                        _contex.Add(servicoModel);
-                        await _contex.SaveChangesAsync();
+                        _context.Add(servicoModel);
+                        await _context.SaveChangesAsync();
 
                         TempData["MensagemSucesso"] = "Serviço criado com sucesso!";
                         return RedirectToAction("ListaServicos");
@@ -138,7 +121,6 @@ namespace TesteUGBMVC.Controllers
                 }
             }
 
-            // Carregue a lista de fornecedores para exibição na View
             var fornecedores = await _fornecedorRepository.BuscarFornecedores();
             novoServico.Fornecedores = fornecedores.Select(f => new SelectListItem
             {
@@ -241,5 +223,92 @@ namespace TesteUGBMVC.Controllers
 
             return View(servicoEditado);
         }
+
+        //----------------------------------------------------------------------
+        [HttpGet]
+        public IActionResult SolicitarServico()
+        {
+            // Aqui, você pode preparar os dados para exibir na View de solicitação de serviço.
+            // Certifique-se de que sua View esteja configurada para exibir as informações corretas, como serviços e fornecedores.
+
+            // Substitua a linha abaixo pela lógica real para obter serviços e fornecedores do banco de dados.
+            var servicos = _context.Servicos.ToList();
+            var fornecedores = _context.Fornecedores.ToList();
+
+            var servicoViewModel = new ServicoViewModel
+            {
+                Servicos = servicos.Select(s => new SelectListItem
+                {
+                    Text = s.NomeDoServico,
+                    Value = s.Id.ToString()
+                }).ToList(),
+                Fornecedores = fornecedores.Select(f => new SelectListItem
+                {
+                    Text = f.NomeEmpresaFornecedora,
+                    Value = f.Id.ToString()
+                }).ToList()
+            };
+
+            return View(servicoViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult SolicitarServico(ServicoViewModel solicitacao)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Crie uma nova solicitação com base nos dados fornecidos.
+                var novaSolicitacao = new SolicitacaoServicoModel
+                {
+                    ServicoId = solicitacao.ServicoId,
+                    FornecedorId = solicitacao.FornecedorId,
+                    // Preencha outras propriedades da solicitação, se houver.
+                };
+
+                // Adicione a nova solicitação ao contexto do banco de dados.
+                _context.SolicitacoesServico.Add(novaSolicitacao);
+
+                // Salve as alterações no banco de dados.
+                _context.SaveChanges();
+
+                // Redirecione para a ação que lista as solicitações.
+                return RedirectToAction("ListaServicosSolicitados", new { fornecedorId = novaSolicitacao.FornecedorId, servicoId = novaSolicitacao.ServicoId });
+            }
+
+            // Se a ModelState não for válida, retorne a View de SolicitarServiço com os erros.
+            var servicos = _context.Servicos.ToList();
+            var fornecedores = _context.Fornecedores.ToList();
+
+            solicitacao.Servicos = servicos.Select(s => new SelectListItem
+            {
+                Text = s.NomeDoServico,
+                Value = s.Id.ToString()
+            }).ToList();
+
+            solicitacao.Fornecedores = fornecedores.Select(f => new SelectListItem
+            {
+                Text = f.NomeEmpresaFornecedora,
+                Value = f.Id.ToString()
+            }).ToList();
+
+            return View(solicitacao);
+        }
+        public IActionResult ListaServicosSolicitados(int fornecedorId, int servicoId)
+        {
+            var servicosSolicitados = _context.SolicitacoesServico
+                .Include(s => s.Servico)
+                .Include(s => s.Fornecedor)
+                .ToList();
+
+            var viewModelList = servicosSolicitados.Select(s => new SolicitacaoServicoViewModel
+            {
+                Servico = s.Servico,
+                Fornecedor = s.Fornecedor,
+                // Adicione outras propriedades aqui, se necessário.
+            }).ToList();
+
+            return View(viewModelList);
+        }
     }
+
 }

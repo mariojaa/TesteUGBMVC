@@ -1,0 +1,41 @@
+﻿@model List<SolicitacaoServicoViewModel>
+
+<h2>Lista de Serviços Solicitados</h2>
+
+@if (Model.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome do Serviço</th>
+                <th>Nome da Empresa Fornecedora</th>
+                <!-- Outras colunas -->
+                <th>Ações</th> <!-- Coluna para ações, incluindo o botão Deletar -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var solicitacao in Model)
+            {
+                <tr>
+                    <td>@solicitacao.Servico.NomeDoServico</td>
+                    <td>@solicitacao.Fornecedor.NomeEmpresaFornecedora</td>
+                    <!-- Preencha outras colunas com os dados relevantes -->
+                    <td>
+                        <!-- Botão Deletar -->
+                        <form asp-controller="Servico" asp-action="DeletarServicoSolicitado" method="post">
+                            <input type="hidden" name="solicitacaoId" value="@solicitacao.Id" />
+                            <button type="submit" class="btn btn-danger">Deletar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+    <p>Nenhum serviço solicitado encontrado.</p>
+}
+
+<a asp-action="SolicitarServico" class="btn btn-primary">Solicitar Serviço</a>
