@@ -27,6 +27,7 @@
     <table id="table-servicos" class="table table-hover">
         <thead class="table-light">
             <tr>
+                <th scope="col">Nome da Empresa</th>
                 <th scope="col">Nome do Serviço</th>
                 <th scope="col">Descrição</th>
                 <th scope="col">Prazo de Entrega</th>
@@ -37,6 +38,7 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>@item.NomeEmpresaFornecedora</td>
                     <td>@item.NomeDoServico</td>
                     <td>@item.DescricaoDoServico</td>
                     <td>@item.PrazoEntregaPadrao</td>
