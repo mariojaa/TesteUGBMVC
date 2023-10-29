@@ -1,23 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using TesteUGB.Models;
-using TesteUGBMVC.Models.Enum;
 using TesteUGBMVC.ViewModels;
 
 namespace TesteUGBMVC.Controllers
 {
-    [Route("api/produto")]
-    public class ProdutoController : Controller
+    [Route("api/estoque")]
+    public class EstoqueController : Controller
     {
-        private readonly string API_ENDPOINT = "http://localhost:9038/api/produto";
+        private readonly string API_ENDPOINT = "http://localhost:9038/api/estoque";
         private readonly HttpClient httpClient;
 
-        public ProdutoController()
+        public EstoqueController()
         {
             httpClient = new HttpClient
             {
@@ -28,13 +24,13 @@ namespace TesteUGBMVC.Controllers
         [HttpGet("ListaProdutos")]
         public async Task<IActionResult> ListaProdutos()
         {
-            List<ProdutoViewModel> produtos = null;
+            List<EstoqueViewModel> produtos = null;
             HttpResponseMessage response = await httpClient.GetAsync(API_ENDPOINT);
 
             if (response.IsSuccessStatusCode)
             {
                 string content = await response.Content.ReadAsStringAsync();
-                produtos = JsonConvert.DeserializeObject<List<ProdutoViewModel>>(content);
+                produtos = JsonConvert.DeserializeObject<List<EstoqueViewModel>>(content);
                 return View(produtos);
             }
             else
@@ -51,24 +47,20 @@ namespace TesteUGBMVC.Controllers
         }
 
         [HttpPost("CriarProduto")]
-        public async Task<IActionResult> CriarProduto(ProdutoViewModel novoProduto)
+        public async Task<IActionResult> CriarProduto(EstoqueViewModel novoProduto)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var produtoModel = new ProdutoModel
+                    var produtoModel = new EstoqueModel
                     {
                         NomeProduto = novoProduto.NomeProduto,
-                        NumeroPedidoProduto = novoProduto.NumeroPedidoProduto,
-                        FornecedorProduto = novoProduto.FornecedorProduto,
                         QuantidadeTotalEmEstoque = (int)novoProduto.QuantidadeTotalEmEstoque,
                         QuantidadeMinimaEmEstoque = (int)novoProduto.QuantidadeMinimaEmEstoque,
                         SetorDeDeposito = novoProduto.SetorDeDeposito,
                         DataCadastroProduto = novoProduto.DataCadastroProduto,
-                        DataPrevisaoEntregaProduto = novoProduto.DataPrevisaoEntregaProduto,
-                        TipoDoProdutoUnitarioOuPacote = novoProduto.TipoDoProdutoUnitarioOuPacote.ToString(),
-                        ValorUnitarioDoProduto = (int)novoProduto.ValorUnitarioDoProduto,
+                        TipoDoProdutoUnitarioOuPacote = novoProduto.TipoDoProdutoUnitarioOuPacote,
                         NumeroNotaFiscalProduto = novoProduto.NumeroNotaFiscalProduto,
                         CodigoEAN = novoProduto.CodigoEAN
                     };
@@ -134,7 +126,7 @@ namespace TesteUGBMVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    var produtoModel = JsonConvert.DeserializeObject<ProdutoViewModel>(content);
+                    var produtoModel = JsonConvert.DeserializeObject<EstoqueViewModel>(content);
                     return View(produtoModel);
                 }
                 else
@@ -151,25 +143,21 @@ namespace TesteUGBMVC.Controllers
         }
 
         [HttpPost("EditarProduto")]
-        public async Task<IActionResult> EditarProduto(ProdutoViewModel produtoEditado)
+        public async Task<IActionResult> EditarProduto(EstoqueViewModel produtoEditado)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var produtoModel = new ProdutoModel
+                    var produtoModel = new EstoqueModel
                     {
                         Id = produtoEditado.Id,
                         NomeProduto = produtoEditado.NomeProduto,
-                        NumeroPedidoProduto = produtoEditado.NumeroPedidoProduto,
-                        FornecedorProduto = produtoEditado.FornecedorProduto,
                         QuantidadeTotalEmEstoque = (int)produtoEditado.QuantidadeTotalEmEstoque,
                         QuantidadeMinimaEmEstoque = (int)produtoEditado.QuantidadeMinimaEmEstoque,
                         SetorDeDeposito = produtoEditado.SetorDeDeposito,
                         DataCadastroProduto = produtoEditado.DataCadastroProduto,
-                        DataPrevisaoEntregaProduto = produtoEditado.DataPrevisaoEntregaProduto,
-                        TipoDoProdutoUnitarioOuPacote = produtoEditado.TipoDoProdutoUnitarioOuPacote.ToString(),
-                        ValorUnitarioDoProduto = (int)produtoEditado.ValorUnitarioDoProduto,
+                        TipoDoProdutoUnitarioOuPacote = produtoEditado.TipoDoProdutoUnitarioOuPacote,
                         NumeroNotaFiscalProduto = produtoEditado.NumeroNotaFiscalProduto,
                         CodigoEAN = produtoEditado.CodigoEAN
                     };

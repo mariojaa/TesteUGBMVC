@@ -1,5 +1,5 @@
 ﻿@using TesteUGBMVC.ViewModels;
-@model List<ProdutoViewModel>
+@model List<EstoqueViewModel>
 
 @{
     ViewData["Title"] = "Lista de Produtos";
@@ -24,17 +24,20 @@
 </div>
 
 <p>
-    <a asp-controller="Produto" asp-action="CriarProduto">Novo Produto</a>
+    <a asp-controller="Estoque" asp-action="CriarProduto">Novo Produto</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
             <th>Nome do Produto</th>
-            <th>Número do Pedido</th>
-            <th>Fornecedor</th>
-            <th>Quantidade em Estoque</th>
-            <th>Ações</th>
+            <th>Estoque</th>
+            <th>Estoque Mínimo</th>
+            <th>Tipo</th>
+            <th>Setor</th>
+            <th>Data Cadastro</th>
+            <th>Nota Fiscal</th>
+            <th>Código EAN</th>
         </tr>
     </thead>
     <tbody>
@@ -42,12 +45,16 @@
         {
             <tr>
                 <td>@produto.NomeProduto</td>
-                <td>@produto.NumeroPedidoProduto</td>
-                <td>@produto.FornecedorProduto</td>
                 <td>@produto.QuantidadeTotalEmEstoque</td>
+                <td>@produto.QuantidadeMinimaEmEstoque</td>
+                <td>@produto.TipoDoProdutoUnitarioOuPacote</td>
+                <td>@produto.SetorDeDeposito</td>
+                <td>@produto.DataCadastroProduto</td>
+                <td>@produto.NumeroNotaFiscalProduto</td>
+                <td>@produto.CodigoEAN</td>
                 <td>
-                    <a asp-controller="Produto" asp-action="EditarProduto" asp-route-id="@produto.Id">Editar</a> |
-                    <a asp-controller="Produto" asp-action="DeletarProduto" asp-route-id="@produto.Id">Excluir</a>
+                    <a asp-controller="Estoque" asp-action="EditarProduto" asp-route-id="@produto.Id">Editar</a> |
+                    <a asp-controller="Estoque" asp-action="DeletarProduto" asp-route-id="@produto.Id">Excluir</a>
                 </td>
             </tr>
         }

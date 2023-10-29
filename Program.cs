@@ -16,8 +16,8 @@ namespace TesteUGBMVC
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
             });
-            builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
-            builder.Services.AddScoped<ProdutoRepository>();
+            builder.Services.AddScoped<IEstoqueRepository, EstoqueRepository>();
+            builder.Services.AddScoped<EstoqueRepository>();
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             builder.Services.AddScoped<UsuarioRepository>();
             builder.Services.AddScoped<IFornecedorRepository, FornecedorRepository>();

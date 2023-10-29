@@ -117,7 +117,7 @@ namespace TesteUGBMVC.Controllers
         {
             try
             {
-                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}"); // solicitação para obter um usuário por ID
+                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {

@@ -1,6 +1,6 @@
 ﻿@using TesteUGBMVC.Models.Enum;
 @using TesteUGBMVC.ViewModels;
-@model ProdutoViewModel
+@model EstoqueViewModel
 
 <h2>Criar Novo Produto</h2>
 
@@ -9,18 +9,6 @@
         <label asp-for="NomeProduto">Nome do Produto</label>
         <input asp-for="NomeProduto" class="form-control" />
         <span asp-validation-for="NomeProduto" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="NumeroPedidoProduto">Número do Pedido</label>
-        <input asp-for="NumeroPedidoProduto" class="form-control" />
-        <span asp-validation-for="NumeroPedidoProduto" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="FornecedorProduto">Fornecedor</label>
-        <input asp-for="FornecedorProduto" class="form-control" />
-        <span asp-validation-for="FornecedorProduto" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -48,23 +36,11 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="DataPrevisaoEntregaProduto">Data de Previsão de Entrega</label>
-        <input asp-for="DataPrevisaoEntregaProduto" type="date" class="form-control" />
-        <span asp-validation-for="DataPrevisaoEntregaProduto" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
         <label asp-for="TipoDoProdutoUnitarioOuPacote">Tipo do Produto</label>
         <select asp-for="TipoDoProdutoUnitarioOuPacote" asp-items="Html.GetEnumSelectList<TipoDoProdutoEnum>()" class="form-control">
             <option value="">Selecione o Tipo</option>
         </select>
         <span asp-validation-for="TipoDoProdutoUnitarioOuPacote" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ValorUnitarioDoProduto">Valor Unitário</label>
-        <input asp-for="ValorUnitarioDoProduto" class="form-control" />
-        <span asp-validation-for="ValorUnitarioDoProduto" class="text-danger"></span>
     </div>
 
     <div class="form-group">
