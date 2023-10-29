@@ -1,4 +1,4 @@
-﻿@using TesteUGBMVC.ViewModels;
+﻿@using TesteUGBMVC.ViewModels
 @model List<EstoqueViewModel>
 
 @{
@@ -6,19 +6,21 @@
 }
 
 <h2>Lista de Produtos</h2>
-@if (TempData.Peek("MensagemSucesso") != null)
+
+@if (TempData["MensagemSucesso"] != null)
 {
     <div class="alert alert-success mensagem-temporaria" role="alert">
         @TempData["MensagemSucesso"]
     </div>
 }
 
-@if (TempData.Peek("MensagemErro") != null)
+@if (TempData["MensagemErro"] != null)
 {
     <div class="alert alert-danger mensagem-temporaria" role="alert">
         @TempData["MensagemErro"]
     </div>
 }
+
 <div class="container mt-3">
     <input class="form-control" id="buscador" type="search" placeholder="Buscar..." aria-controls="table-fornecedores">
 </div>
@@ -38,6 +40,7 @@
             <th>Data Cadastro</th>
             <th>Nota Fiscal</th>
             <th>Código EAN</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
@@ -45,7 +48,7 @@
         {
             <tr>
                 <td>@produto.NomeProduto</td>
-                <td>@produto.QuantidadeTotalEmEstoque</td>
+                <td class="quantidade-estoque" data-id="@produto.Id">@produto.QuantidadeTotalEmEstoque</td>
                 <td>@produto.QuantidadeMinimaEmEstoque</td>
                 <td>@produto.TipoDoProdutoUnitarioOuPacote</td>
                 <td>@produto.SetorDeDeposito</td>
@@ -54,50 +57,57 @@
                 <td>@produto.CodigoEAN</td>
                 <td>
                     <a asp-controller="Estoque" asp-action="EditarProduto" asp-route-id="@produto.Id">Editar</a> |
-                    <a asp-controller="Estoque" asp-action="DeletarProduto" asp-route-id="@produto.Id">Excluir</a>
+                    <a asp-controller="Estoque" asp-action="DeletarProduto" asp-route-id="@produto.Id"
+                       onclick="return confirm('Tem certeza de que deseja excluir este produto?')">Excluir</a>
+                    <br>
+                    <button class="btn btn-primary btn-entrada" data-id="@produto.Id">Entrada</button> |
+                    <button class="btn btn-danger btn-saida" data-id="@produto.Id">Saída</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-@section Scripts{
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#table-fornecedores').DataTable({
-                "ordering": true,
-                "paging": true,
-                "searching": true,
-                "pageLength": 10,
-                "info": false,
-                "lengthChange": false,
-                "dom": 'lrtip',
-                "oLanguage": {
-                    "sInfoPostFix": "",
-                    "sInfoThousands": ".",
-                    "sLoadingRecords": "Carregando...",
-                    "sProcessing": "Processando...",
-                    "sSearch": "Pesquisa",
-                    "sZeroRecords": "Nenhum registro encontrado",
-                    "oPaginate": {
-                        "sNext": "Próximo",
-                        "sPrevious": "Anterior",
-                        "sFirst": "Primeiro",
-                        "sLast": "Último"
-                    },
-                    "oAria": {
-                        "sSortAscending": ": Ordenar colunas de forma ascendente",
-                        "sSortDescending": ": Ordenar colunas de forma descendente"
-                    }
-                }
-            });
+            // Ocultar mensagens temporárias após 2 segundos
+            $(".mensagem-temporaria").delay(2000).fadeOut("slow");
+            $('.btn-entrada, .btn-saida').click(function () {
+                var id = $(this).data('id');
+                var acao = $(this).hasClass('btn-entrada') ? 'entrada' : 'saida';
 
-            var oTable = $('#table-fornecedores').DataTable();
-            $('#buscador').on("input", function () {
-                oTable.search($(this).val()).draw();
-            });
-            $(document).ready(function () {
-                // Ocultar mensagens temporárias após 2 segundos
-                $(".mensagem-temporaria").delay(2000).fadeOut("slow");
+                bootbox.prompt({
+                    title: "Quantidade de " + acao + " para o produto",
+                    callback: function (quantidade) {
+                        if (quantidade === null) {
+                            return;
+                        }
+                        if (isNaN(quantidade) || quantidade <= 0) {
+                            bootbox.alert("Quantidade inválida");
+                            return;
+                        }
+
+                        // Enviar a solicitação para a API
+                        $.ajax({
+                            url: "/api/estoque/" + id + "/" + acao,
+                            type: "PATCH",
+                            data: JSON.stringify(quantidade),
+                            contentType: "application/json",
+                            success: function (data) {
+                                // Atualize a quantidade na tabela
+                                var cell = $('.quantidade-estoque[data-id="' + id + '"]');
+                                cell.text(data.quantidadeTotalEmEstoque);
+                                // Defina a mensagem de sucesso na TempData
+                                TempData["MensagemSucesso"] = acao.charAt(0).toUpperCase() + acao.slice(1) + " de estoque realizada com sucesso!";
+                            },
+                            error: function () {
+                                bootbox.alert("Erro ao processar a solicitação.");
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>

@@ -1,27 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using TesteUGB.Models;
+using TesteUGB.Repositorio;
+using TesteUGBMVC.Models;
 using TesteUGBMVC.ViewModels;
 
 namespace TesteUGBMVC.Controllers
 {
-    [Route("api/estoque")]
     public class EstoqueController : Controller
     {
         private readonly string API_ENDPOINT = "http://localhost:9038/api/estoque";
         private readonly HttpClient httpClient;
+        private readonly IEstoqueRepository _estoqueRepository;
 
-        public EstoqueController()
+        public EstoqueController(IEstoqueRepository estoqueRepository)
         {
             httpClient = new HttpClient
             {
                 BaseAddress = new Uri(API_ENDPOINT)
             };
+            _estoqueRepository = estoqueRepository;
         }
 
-        [HttpGet("ListaProdutos")]
         public async Task<IActionResult> ListaProdutos()
         {
             List<EstoqueViewModel> produtos = null;
@@ -40,13 +44,12 @@ namespace TesteUGBMVC.Controllers
             }
         }
 
-        [HttpGet("CriarProduto")]
         public IActionResult CriarProduto()
         {
             return View();
         }
 
-        [HttpPost("CriarProduto")]
+        [HttpPost]
         public async Task<IActionResult> CriarProduto(EstoqueViewModel novoProduto)
         {
             if (ModelState.IsValid)
@@ -92,7 +95,6 @@ namespace TesteUGBMVC.Controllers
             return View(novoProduto);
         }
 
-        [HttpGet("DeletarProduto/{id}")]
         public async Task<IActionResult> DeletarProduto(int id)
         {
             try
@@ -115,8 +117,7 @@ namespace TesteUGBMVC.Controllers
 
             return RedirectToAction("ListaProdutos");
         }
-
-        [HttpGet("EditarProduto/{id}")]
+        [HttpGet]
         public async Task<IActionResult> EditarProduto(int id)
         {
             try
@@ -142,7 +143,7 @@ namespace TesteUGBMVC.Controllers
             }
         }
 
-        [HttpPost("EditarProduto")]
+        [HttpPost]
         public async Task<IActionResult> EditarProduto(EstoqueViewModel produtoEditado)
         {
             if (ModelState.IsValid)
@@ -186,6 +187,136 @@ namespace TesteUGBMVC.Controllers
                 }
             }
             return View(produtoEditado);
+        }
+
+        public async Task<IActionResult> EntradaProduto(int id)
+        {
+            var produto = await _estoqueRepository.FindById(id);
+
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            return View(produto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EntradaProduto(int id, int quantidade)
+        {
+            try
+            {
+                var produto = await _estoqueRepository.FindById(id);
+
+                if (produto == null)
+                {
+                    return NotFound();
+                }
+
+                if (quantidade <= 0)
+                {
+                    ModelState.AddModelError("quantidade", "A quantidade de entrada deve ser maior que zero.");
+                    return View("Error");
+                }
+
+                // Adicione a quantidade à propriedade QuantidadeTotalEmEstoque
+                produto.QuantidadeTotalEmEstoque += quantidade;
+
+                await _estoqueRepository.Update(produto);
+
+                return RedirectToAction("ListaProdutos");
+            }
+            catch (Exception)
+            {
+                return View("Error");
+            }
+        }
+
+        public async Task<IActionResult> SaidaProduto(int id)
+        {
+            var produto = await _estoqueRepository.FindById(id);
+
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            return View(produto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaidaProduto(int id, int quantidade)
+        {
+            try
+            {
+                var produto = await _estoqueRepository.FindById(id);
+
+                if (produto == null)
+                {
+                    return NotFound();
+                }
+
+                if (quantidade <= 0 || quantidade > produto.QuantidadeTotalEmEstoque)
+                {
+                    ModelState.AddModelError("quantidade", "A quantidade de saída não é válida.");
+                    return View(produto);
+                }
+
+                // Subtraia a quantidade da propriedade QuantidadeTotalEmEstoque
+                produto.QuantidadeTotalEmEstoque -= quantidade;
+
+                await _estoqueRepository.Update(produto);
+
+                return RedirectToAction("ListaProdutos");
+            }
+            catch (Exception)
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpPatch("{id}/{acao}")]
+        public async Task<ActionResult<EstoqueModel>> AtualizarEstoque(int id, string acao, [FromBody] EstoqueViewModel model)
+        {
+            var produto = await _estoqueRepository.FindById(id);
+
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            if (acao == "entrada")
+            {
+                if (model.Quantidade <= 0)
+                {
+                    return BadRequest("A quantidade de entrada deve ser maior que zero.");
+                }
+
+                produto.QuantidadeTotalEmEstoque += model.Quantidade;
+            }
+            else if (acao == "saida")
+            {
+                if (model.Quantidade <= 0 || model.Quantidade > produto.QuantidadeTotalEmEstoque)
+                {
+                    return BadRequest("A quantidade de saída não é válida.");
+                }
+
+                produto.QuantidadeTotalEmEstoque -= model.Quantidade;
+            }
+            else
+            {
+                return BadRequest("Ação inválida.");
+            }
+
+            try
+            {
+                await _estoqueRepository.Update(produto);
+                return Ok(produto);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops, sem conexão com o banco de dados! Aguarde alguns minutos e tente novamente.");
+            }
         }
     }
 }

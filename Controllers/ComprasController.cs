@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using TesteUGB.Models;
-using TesteUGB.Models.Enum;
+using TesteUGB.Repositories;
 using TesteUGBMVC.Models;
 using TesteUGBMVC.ViewModels;
 
@@ -17,13 +18,15 @@ namespace TesteUGBMVC.Controllers
     {
         private readonly string API_ENDPOINT = "http://localhost:9038/api/compras";
         private readonly HttpClient httpClient;
+        private readonly ComprasRepository _comprasRepository;
 
-        public ComprasController()
+        public ComprasController(ComprasRepository comprasRepository)
         {
             httpClient = new HttpClient
             {
                 BaseAddress = new Uri(API_ENDPOINT)
             };
+            _comprasRepository = comprasRepository;
         }
 
         [HttpGet("ListaCompras")]
@@ -63,12 +66,12 @@ namespace TesteUGBMVC.Controllers
                         NomeProduto = novaCompra.NomeProduto,
                         CodigoDaSolicitacao = novaCompra.CodigoDaSolicitacao,
                         Fabricante = novaCompra.Fabricante,
-                        QuantidadeSolicitada = (int)novaCompra.QuantidadeSolicitada,
+                        QuantidadeSolicitada = novaCompra.QuantidadeSolicitada,
                         DepartamentoSolicitante = novaCompra.DepartamentoSolicitante,
                         DataSolicitada = novaCompra.DataSolicitada,
                         DataPrevisaoEntregaProduto = novaCompra.DataPrevisaoEntregaProduto,
                         TipoDoProduto = novaCompra.TipoDoProduto,
-                        ValorUnitarioDoProduto = (int)novaCompra.ValorUnitarioDoProduto,
+                        ValorUnitarioDoProduto = novaCompra.ValorUnitarioDoProduto,
                         NumeroNotaFiscalProduto = novaCompra.NumeroNotaFiscalProduto,
                         CodigoEAN = novaCompra.CodigoEAN
                     };
@@ -124,7 +127,7 @@ namespace TesteUGBMVC.Controllers
             return RedirectToAction("ListaCompras");
         }
 
-        [HttpGet("EditarCompra/{id}")]
+        [HttpGet]
         public async Task<IActionResult> EditarCompra(int id)
         {
             try
@@ -140,7 +143,7 @@ namespace TesteUGBMVC.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Erro ao obter a compra da API.");
-                    return View();
+                    return View(); // Certifique-se de que a view está corretamente configurada
                 }
             }
             catch (Exception ex)
@@ -150,53 +153,58 @@ namespace TesteUGBMVC.Controllers
             }
         }
 
-        [HttpPost("EditarCompra")]
-        public async Task<IActionResult> EditarCompra(ComprasViewModel compraEditada)
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Adicionar validação contra CSRF
+        public async Task<IActionResult> EditarCompra([Bind("Id, NomeProduto, CodigoDaSolicitacao, Fabricante, QuantidadeSolicitada, DepartamentoSolicitante, DataSolicitada, DataPrevisaoEntregaProduto, TipoDoProduto, ValorUnitarioDoProduto, NumeroNotaFiscalProduto, CodigoEAN")] ComprasViewModel compraEditada)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                return View(compraEditada);
+            }
+
+            try
+            {
+                var compraModel = new ComprasModel
                 {
-                    var compraModel = new ComprasModel
-                    {
-                        Id = compraEditada.Id,
-                        NomeProduto = compraEditada.NomeProduto,
-                        CodigoDaSolicitacao = compraEditada.CodigoDaSolicitacao,
-                        Fabricante = compraEditada.Fabricante,
-                        QuantidadeSolicitada = (int)compraEditada.QuantidadeSolicitada,
-                        DepartamentoSolicitante = compraEditada.DepartamentoSolicitante,
-                        DataSolicitada = compraEditada.DataSolicitada,
-                        DataPrevisaoEntregaProduto = compraEditada.DataPrevisaoEntregaProduto,
-                        TipoDoProduto = compraEditada.TipoDoProduto,
-                        ValorUnitarioDoProduto = (int)compraEditada.ValorUnitarioDoProduto,
-                        NumeroNotaFiscalProduto = compraEditada.NumeroNotaFiscalProduto,
-                        CodigoEAN = compraEditada.CodigoEAN
-                    };
+                    Id = compraEditada.Id,
+                    NomeProduto = compraEditada.NomeProduto,
+                    CodigoDaSolicitacao = compraEditada.CodigoDaSolicitacao,
+                    Fabricante = compraEditada.Fabricante,
+                    QuantidadeSolicitada = compraEditada.QuantidadeSolicitada,
+                    DepartamentoSolicitante = compraEditada.DepartamentoSolicitante,
+                    DataSolicitada = compraEditada.DataSolicitada,
+                    DataPrevisaoEntregaProduto = compraEditada.DataPrevisaoEntregaProduto,
+                    TipoDoProduto = compraEditada.TipoDoProduto,
+                    ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto,
+                    NumeroNotaFiscalProduto = compraEditada.NumeroNotaFiscalProduto,
+                    CodigoEAN = compraEditada.CodigoEAN
+                };
 
-                    var compraJson = JsonConvert.SerializeObject(compraModel);
+                var usuarioJson = JsonConvert.SerializeObject(compraModel);
 
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                // Certifique-se de que o httpClient está configurado corretamente, incluindo a URL base e cabeçalhos
 
-                    var content = new StringContent(compraJson, Encoding.UTF8, "application/json");
+                var content = new StringContent(usuarioJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{compraModel.Id}", content);
+                HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{compraModel.Id}", content);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        TempData["MensagemSucesso"] = "Compra editada com sucesso!";
-                        return RedirectToAction("ListaCompras");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Erro ao editar a compra na API.");
-                    }
-                }
-                catch (Exception ex)
+                if (response.IsSuccessStatusCode)
                 {
-                    ModelState.AddModelError("", "Erro ao editar a compra: " + ex.Message);
+                    TempData["MensagemSucesso"] = "Compra editada com sucesso!";
+                    return RedirectToAction("ListaCompras");
                 }
+                else
+                {
+                    ModelState.AddModelError("", "Erro ao editar a compra na API.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Erro ao editar a compra: " + ex.Message);
             }
             return View(compraEditada);
         }
+
     }
 }

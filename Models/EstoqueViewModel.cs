@@ -13,6 +13,8 @@ namespace TesteUGBMVC.ViewModels
         public TipoDoProdutoEnum TipoDoProdutoUnitarioOuPacote { get; set; }
         public long NumeroNotaFiscalProduto { get; set; }
         public long CodigoEAN { get; set; }
+        public int QuantidadeAtualEmEstoque { get; set; }
+        public int Quantidade { get; set; }
 
     }
 }
