@@ -1,8 +1,0 @@
-﻿@model TesteUGBMVC.Models.ProdutoViewModel
-
-<h3 class="display-5 text-center">Deseja realmente excluir o produto? <b>@Model.NomeProduto</b>?</h3>
-<br />
-<form method="post" asp-controller="Produto" asp-action="DeletarProduto" asp-route-id="@Model.Id">
-    <button type="submit" class="btn btn-danger btn-block">Confirmar</button>
-    <a class="btn btn-primary btn-block" asp-controller="Produto" asp-action="ListaProdutos">Cancelar</a>
-</form>

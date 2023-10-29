@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using TesteUGB.Models;
-using TesteUGBMVC.Models;
-
+using TesteUGBMVC.Models.Enum;
+using TesteUGBMVC.ViewModels;
 
 namespace TesteUGBMVC.Controllers
 {
+    [Route("api/produto")]
     public class ProdutoController : Controller
     {
         private readonly string API_ENDPOINT = "http://localhost:9038/api/produto";
@@ -21,6 +25,7 @@ namespace TesteUGBMVC.Controllers
             };
         }
 
+        [HttpGet("ListaProdutos")]
         public async Task<IActionResult> ListaProdutos()
         {
             List<ProdutoViewModel> produtos = null;
@@ -39,13 +44,13 @@ namespace TesteUGBMVC.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("CriarProduto")]
         public IActionResult CriarProduto()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("CriarProduto")]
         public async Task<IActionResult> CriarProduto(ProdutoViewModel novoProduto)
         {
             if (ModelState.IsValid)
@@ -57,14 +62,13 @@ namespace TesteUGBMVC.Controllers
                         NomeProduto = novoProduto.NomeProduto,
                         NumeroPedidoProduto = novoProduto.NumeroPedidoProduto,
                         FornecedorProduto = novoProduto.FornecedorProduto,
-                        QuantidadeEntradaProduto = novoProduto.QuantidadeEntradaProduto,
-                        QuantidadeEmEstoque = novoProduto.QuantidadeEmEstoque + novoProduto.QuantidadeEntradaProduto, // Atualize a quantidade em estoque
-                        QuantidadeMinimaEmEstoque = novoProduto.QuantidadeMinimaEmEstoque,
+                        QuantidadeTotalEmEstoque = (int)novoProduto.QuantidadeTotalEmEstoque,
+                        QuantidadeMinimaEmEstoque = (int)novoProduto.QuantidadeMinimaEmEstoque,
                         SetorDeDeposito = novoProduto.SetorDeDeposito,
                         DataCadastroProduto = novoProduto.DataCadastroProduto,
                         DataPrevisaoEntregaProduto = novoProduto.DataPrevisaoEntregaProduto,
-                        TipoDoProdutoUnitarioOuPacote = novoProduto.TipoDoProdutoUnitarioOuPacote,
-                        ValorUnitarioDoProduto = novoProduto.ValorUnitarioDoProduto,
+                        TipoDoProdutoUnitarioOuPacote = novoProduto.TipoDoProdutoUnitarioOuPacote.ToString(),
+                        ValorUnitarioDoProduto = (int)novoProduto.ValorUnitarioDoProduto,
                         NumeroNotaFiscalProduto = novoProduto.NumeroNotaFiscalProduto,
                         CodigoEAN = novoProduto.CodigoEAN
                     };
@@ -75,7 +79,7 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(novoProdutoJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content); // Solicitaçõa Post
+                    HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -96,12 +100,12 @@ namespace TesteUGBMVC.Controllers
             return View(novoProduto);
         }
 
-[HttpGet]
+        [HttpGet("DeletarProduto/{id}")]
         public async Task<IActionResult> DeletarProduto(int id)
         {
             try
             {
-                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}"); // solicitação para delete por ID
+                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -119,12 +123,13 @@ namespace TesteUGBMVC.Controllers
 
             return RedirectToAction("ListaProdutos");
         }
-        [HttpGet]
+
+        [HttpGet("EditarProduto/{id}")]
         public async Task<IActionResult> EditarProduto(int id)
         {
             try
             {
-                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}"); // solicitação para obter um produto por ID
+                HttpResponseMessage response = await httpClient.GetAsync($"{API_ENDPOINT}/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -145,7 +150,7 @@ namespace TesteUGBMVC.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("EditarProduto")]
         public async Task<IActionResult> EditarProduto(ProdutoViewModel produtoEditado)
         {
             if (ModelState.IsValid)
@@ -158,14 +163,13 @@ namespace TesteUGBMVC.Controllers
                         NomeProduto = produtoEditado.NomeProduto,
                         NumeroPedidoProduto = produtoEditado.NumeroPedidoProduto,
                         FornecedorProduto = produtoEditado.FornecedorProduto,
-                        QuantidadeEntradaProduto = produtoEditado.QuantidadeEntradaProduto,
-                        QuantidadeEmEstoque = produtoEditado.QuantidadeEmEstoque,
-                        QuantidadeMinimaEmEstoque = produtoEditado.QuantidadeMinimaEmEstoque,
+                        QuantidadeTotalEmEstoque = (int)produtoEditado.QuantidadeTotalEmEstoque,
+                        QuantidadeMinimaEmEstoque = (int)produtoEditado.QuantidadeMinimaEmEstoque,
                         SetorDeDeposito = produtoEditado.SetorDeDeposito,
                         DataCadastroProduto = produtoEditado.DataCadastroProduto,
                         DataPrevisaoEntregaProduto = produtoEditado.DataPrevisaoEntregaProduto,
-                        TipoDoProdutoUnitarioOuPacote = produtoEditado.TipoDoProdutoUnitarioOuPacote,
-                        ValorUnitarioDoProduto = produtoEditado.ValorUnitarioDoProduto,
+                        TipoDoProdutoUnitarioOuPacote = produtoEditado.TipoDoProdutoUnitarioOuPacote.ToString(),
+                        ValorUnitarioDoProduto = (int)produtoEditado.ValorUnitarioDoProduto,
                         NumeroNotaFiscalProduto = produtoEditado.NumeroNotaFiscalProduto,
                         CodigoEAN = produtoEditado.CodigoEAN
                     };
@@ -176,7 +180,7 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(produtoJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{produtoModel.Id}", content); // Solicitação para editar o usuário por ID
+                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{produtoModel.Id}", content);
 
                     if (response.IsSuccessStatusCode)
                     {

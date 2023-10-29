@@ -1,95 +1,85 @@
-﻿@model TesteUGBMVC.Models.ProdutoViewModel
+﻿@using TesteUGBMVC.Models.Enum;
+@using TesteUGBMVC.ViewModels;
+@model ProdutoViewModel
 
-<h1 class="display-4 text-center">Cadastro de Produtos</h1>
+<h2>Criar Novo Produto</h2>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <form asp-controller="Produto" asp-action="CriarProduto" method="post" class="needs-validation" novalidate>
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <div class="form-group">
-                    Nome do Produto
-                    <label class="control-label" placeholder="Digite a nome do produto"></label>
-                    <input asp-for="NomeProduto" class="form-control" required>
-                    <span asp-validation-for="NomeProduto" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    Número do Pedido
-                    <label class="control-label" placeholder="Digite o número do pedido"></label>
-                    <input asp-for="NumeroPedidoProduto" class="form-control" required>
-                    <span asp-validation-for="NumeroPedidoProduto" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    Fornecedor
-                    <label class="control-label" placeholder="Digite o fornecedor"></label>
-                    <input asp-for="FornecedorProduto" class="form-control" required>
-                    <span asp-validation-for="FornecedorProduto" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    Quantidade em Estoque
-                    <label class="control-label" placeholder="Digite a quantidade de peças recebidas"></label>
-                    <input asp-for="QuantidadeEmEstoque" class="form-control" required>
-                    <span asp-validation-for="QuantidadeEmEstoque" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    Quantidade de Peças
-                    <label class="control-label" placeholder="Digite a quantidade de peças recebidas"></label>
-                    <input asp-for="QuantidadeEntradaProduto" class="form-control" required>
-                    <span asp-validation-for="QuantidadeEntradaProduto" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    Setor do Estoque
-                    <label class="control-label" placeholder="Digite o setor de estoque"></label>
-                    <input asp-for="SetorDeDeposito" class="form-control" required>
-                    <span asp-validation-for="SetorDeDeposito" class="text-danger"></span>
-                </div>
-
-                @*<div class="form-group">
-                    Data do Cadastro
-                    <label class="control-label"></label>
-                    <input asp-for="DataCadastroProduto" class="form-control" required>
-                    <span asp-validation-for="DataCadastroProduto" class="text-danger"></span>
-                </div>*@
-
-                <div class="form-group">
-                    Tipo de Produto
-                    <label class="control-label" placeholder="Digite o tipo de produto"></label>
-                    <input asp-for="TipoDoProdutoUnitarioOuPacote" class="form-control" required> @*Mudar para ENUM*@
-                    <span asp-validation-for="TipoDoProdutoUnitarioOuPacote" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    Nota Fiscal
-                    <label class="control-label" placeholder="Digite a nota fiscal"></label>
-                    <input asp-for="NumeroNotaFiscalProduto" class="form-control" required>
-                    <span asp-validation-for="NumeroNotaFiscalProduto" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    Código de Barras (EAN)
-                    <label class="control-label" placeholder="Digite o código de barras"></label>
-                    <input asp-for="CodigoEAN" class="form-control" required>
-                    <span asp-validation-for="CodigoEAN" class="text-danger"></span>
-                </div>
-
-                <div class="form-group text-center fs-6">
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
-                    <a asp-controller="Produto" asp-action="ListaProdutos" class="btn btn-secondary">Voltar</a>
-                </div>
-            </form>
-        </div>
+<form asp-action="CriarProduto" method="post">
+    <div class="form-group">
+        <label asp-for="NomeProduto">Nome do Produto</label>
+        <input asp-for="NomeProduto" class="form-control" />
+        <span asp-validation-for="NomeProduto" class="text-danger"></span>
     </div>
-</div>
 
-@section Scripts {
-    
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <div class="form-group">
+        <label asp-for="NumeroPedidoProduto">Número do Pedido</label>
+        <input asp-for="NumeroPedidoProduto" class="form-control" />
+        <span asp-validation-for="NumeroPedidoProduto" class="text-danger"></span>
+    </div>
 
-}
+    <div class="form-group">
+        <label asp-for="FornecedorProduto">Fornecedor</label>
+        <input asp-for="FornecedorProduto" class="form-control" />
+        <span asp-validation-for="FornecedorProduto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QuantidadeTotalEmEstoque">Quantidade em Estoque</label>
+        <input asp-for="QuantidadeTotalEmEstoque" class="form-control" />
+        <span asp-validation-for="QuantidadeTotalEmEstoque" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QuantidadeMinimaEmEstoque">Quantidade Mínima em Estoque</label>
+        <input asp-for="QuantidadeMinimaEmEstoque" class="form-control" />
+        <span asp-validation-for="QuantidadeMinimaEmEstoque" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SetorDeDeposito">Setor de Depósito</label>
+        <input asp-for="SetorDeDeposito" class="form-control" />
+        <span asp-validation-for="SetorDeDeposito" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DataCadastroProduto">Data de Cadastro</label>
+        <input asp-for="DataCadastroProduto" type="date" class="form-control" />
+        <span asp-validation-for="DataCadastroProduto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DataPrevisaoEntregaProduto">Data de Previsão de Entrega</label>
+        <input asp-for="DataPrevisaoEntregaProduto" type="date" class="form-control" />
+        <span asp-validation-for="DataPrevisaoEntregaProduto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TipoDoProdutoUnitarioOuPacote">Tipo do Produto</label>
+        <select asp-for="TipoDoProdutoUnitarioOuPacote" asp-items="Html.GetEnumSelectList<TipoDoProdutoEnum>()" class="form-control">
+            <option value="">Selecione o Tipo</option>
+        </select>
+        <span asp-validation-for="TipoDoProdutoUnitarioOuPacote" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ValorUnitarioDoProduto">Valor Unitário</label>
+        <input asp-for="ValorUnitarioDoProduto" class="form-control" />
+        <span asp-validation-for="ValorUnitarioDoProduto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NumeroNotaFiscalProduto">Número da Nota Fiscal</label>
+        <input asp-for="NumeroNotaFiscalProduto" class="form-control" />
+        <span asp-validation-for="NumeroNotaFiscalProduto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CodigoEAN">Código de Barras</label>
+        <input asp-for="CodigoEAN" class="form-control" />
+        <span asp-validation-for="CodigoEAN" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>
+
+<a asp-action="ListaProdutos">Voltar para a Lista</a>
