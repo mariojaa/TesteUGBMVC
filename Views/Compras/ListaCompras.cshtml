@@ -1,0 +1,50 @@
+﻿@model List<ComprasViewModel>
+
+<h2>Lista de Compras</h2>
+
+<p><a asp-action="CriarCompra">Criar Nova Compra</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome do Produto</th>
+            <th>Código da Solicitação</th>
+            <th>Fabricante</th>
+            <th>Quantidade Solicitada</th>
+            <th>Departamento Solicitante</th>
+            <th>Data Solicitada</th>
+            <th>Data Previsão de Entrega</th>
+            <th>Tipo do Produto</th>
+            <th>Valor Unitário</th>
+            <th>Valor Total</th>
+            <th>Número Nota Fiscal</th>
+            <th>Código EAN</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var compra in Model)
+        {
+            <tr>
+                <td>@compra.Id</td>
+                <td>@compra.NomeProduto</td>
+                <td>@compra.CodigoDaSolicitacao</td>
+                <td>@compra.Fabricante</td>
+                <td>@compra.QuantidadeSolicitada</td>
+                <td>@compra.DepartamentoSolicitante</td>
+                <td>@compra.DataSolicitada.ToShortDateString()</td>
+                <td>@compra.DataPrevisaoEntregaProduto.ToShortDateString()</td>
+                <td>@compra.TipoDoProduto</td>
+                <td>@compra.ValorUnitarioDoProduto</td>
+                <td>@compra.ValorTotal</td>
+                <td>@compra.NumeroNotaFiscalProduto</td>
+                <td>@compra.CodigoEAN</td>
+                <td>
+                    <a asp-action="EditarCompra" asp-route-id="@compra.Id">Editar</a> |
+                    <a asp-action="DeletarCompra" asp-route-id="@compra.Id">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

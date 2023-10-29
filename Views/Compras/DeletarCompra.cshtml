@@ -1,0 +1,13 @@
+﻿@model ComprasViewModel
+
+<h2>Confirmar Exclusão</h2>
+
+<p>Tem certeza de que deseja excluir a compra com o ID @Model.Id?</p>
+
+<form asp-action="DeletarCompra">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Confirmar Exclusão" class="btn btn-danger" />
+        <a asp-action="ListaCompras" class="btn btn-primary">Cancelar</a>
+    </div>
+</form>

@@ -1,0 +1,69 @@
+﻿@using TesteUGB.Models.Enum;
+@model ComprasViewModel
+
+<h2>Editar Compra</h2>
+
+<form asp-action="EditarCompra">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="NomeProduto">Nome do Produto</label>
+        <input asp-for="NomeProduto" class="form-control" />
+        <span asp-validation-for="NomeProduto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CodigoDaSolicitacao">Código da Solicitação</label>
+        <input asp-for="CodigoDaSolicitacao" class="form-control" />
+        <span asp-validation-for="CodigoDaSolicitacao" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Fabricante">Fabricante</label>
+        <input asp-for="Fabricante" class="form-control" />
+        <span asp-validation-for="Fabricante" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="QuantidadeSolicitada">Quantidade Solicitada</label>
+        <input asp-for="QuantidadeSolicitada" class="form-control" />
+        <span asp-validation-for="QuantidadeSolicitada" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DepartamentoSolicitante">Departamento Solicitante</label>
+        <input asp-for="DepartamentoSolicitante" class="form-control" />
+        <span asp-validation-for="DepartamentoSolicitante" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DataSolicitada">Data Solicitada</label>
+        <input asp-for="DataSolicitada" type="date" class="form-control" />
+        <span asp-validation-for="DataSolicitada" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DataPrevisaoEntregaProduto">Data Previsão de Entrega</label>
+        <input asp-for="DataPrevisaoEntregaProduto" type="date" class="form-control" />
+        <span asp-validation-for="DataPrevisaoEntregaProduto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TipoDoProduto">Tipo do Produto</label>
+        <select asp-for="TipoDoProduto" asp-items="Html.GetEnumSelectList<TipoDoProdutoEnum>()" class="form-control">
+            <option value="">Selecione o Tipo do Produto</option>
+        </select>
+        <span asp-validation-for="TipoDoProduto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ValorUnitarioDoProduto">Valor Unitário do Produto</label>
+        <input asp-for="ValorUnitarioDoProduto" class="form-control" />
+        <span asp-validation-for="ValorUnitarioDoProduto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NumeroNotaFiscalProduto">Número Nota Fiscal</label>
+        <input asp-for="NumeroNotaFiscalProduto" class="form-control" />
+        <span asp-validation-for="NumeroNotaFiscalProduto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CodigoEAN">Código EAN</label>
+        <input asp-for="CodigoEAN" class="form-control" />
+        <span asp-validation-for="CodigoEAN" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Editar Compra" class="btn btn-primary" />
+    </div>
+</form>
