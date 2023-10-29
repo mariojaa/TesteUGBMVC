@@ -1,7 +1,23 @@
 ﻿@model List<SolicitacaoServicoViewModel>
 
 <h2>Lista de Serviços Solicitados</h2>
+@if (TempData.Peek("MensagemSucesso") != null)
+{
+    <div class="alert alert-success mensagem-temporaria" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
 
+@if (TempData.Peek("MensagemErro") != null)
+{
+    <div class="alert alert-danger mensagem-temporaria" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+<div class="container mt-3">
+    <input class="form-control" id="buscador" type="search" placeholder="Buscar..." aria-controls="table-fornecedores">
+</div>
 @if (Model.Count > 0)
 {
     <table class="table">
@@ -9,8 +25,7 @@
             <tr>
                 <th>Nome do Serviço</th>
                 <th>Nome da Empresa Fornecedora</th>
-                <!-- Outras colunas -->
-                <th>Ações</th> <!-- Coluna para ações, incluindo o botão Deletar -->
+                <th>Dada da Solicitação</th>
             </tr>
         </thead>
         <tbody>
@@ -19,13 +34,8 @@
                 <tr>
                     <td>@solicitacao.Servico.NomeDoServico</td>
                     <td>@solicitacao.Fornecedor.NomeEmpresaFornecedora</td>
-                    <!-- Preencha outras colunas com os dados relevantes -->
+                    <td>@DateTime.Now</td>
                     <td>
-                        <!-- Botão Deletar -->
-                        <form asp-controller="Servico" asp-action="DeletarServicoSolicitado" method="post">
-                            <input type="hidden" name="solicitacaoId" value="@solicitacao.Id" />
-                            <button type="submit" class="btn btn-danger">Deletar</button>
-                        </form>
                     </td>
                 </tr>
             }
@@ -39,3 +49,45 @@ else
 }
 
 <a asp-action="SolicitarServico" class="btn btn-primary">Solicitar Serviço</a>
+@section Scripts{
+    <script type="text/javascript">
+
+            $('#table-servicos').DataTable({
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "pageLength": 10,
+                "info": false,
+                "lengthChange": false,
+                "dom": 'lrtip',
+                "oLanguage": {
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sSearch": "Pesquisa",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                }
+            });
+
+            var oTable = $('#table-servicos').DataTable();
+            $('#buscador').on("input", function () {
+                oTable.search($(this).val()).draw();
+            });
+        $(document).ready(function () {
+            // Ocultar mensagens temporárias após 2 segundos
+            $(".mensagem-temporaria").delay(2000).fadeOut("slow");
+        });
+        });
+    </script>
+}

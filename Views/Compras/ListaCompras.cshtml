@@ -4,47 +4,114 @@
 
 <p><a asp-action="CriarCompra">Criar Nova Compra</a></p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nome do Produto</th>
-            <th>Código da Solicitação</th>
-            <th>Fabricante</th>
-            <th>Quantidade Solicitada</th>
-            <th>Departamento Solicitante</th>
-            <th>Data Solicitada</th>
-            <th>Data Previsão de Entrega</th>
-            <th>Tipo do Produto</th>
-            <th>Valor Unitário</th>
-            <th>Valor Total</th>
-            <th>Número Nota Fiscal</th>
-            <th>Código EAN</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var compra in Model)
-        {
+@if (TempData.Peek("MensagemSucesso") != null)
+{
+    <div class="alert alert-success mensagem-temporaria" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+@if (TempData.Peek("MensagemErro") != null)
+{
+    <div class="alert alert-danger mensagem-temporaria" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+
+
+<div class="container mt-3">
+    <input class="form-control" id="buscador" type="search" placeholder="Buscar..." aria-controls="table-usuarios">
+</div>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@compra.Id</td>
-                <td>@compra.NomeProduto</td>
-                <td>@compra.CodigoDaSolicitacao</td>
-                <td>@compra.Fabricante</td>
-                <td>@compra.QuantidadeSolicitada</td>
-                <td>@compra.DepartamentoSolicitante</td>
-                <td>@compra.DataSolicitada.ToShortDateString()</td>
-                <td>@compra.DataPrevisaoEntregaProduto.ToShortDateString()</td>
-                <td>@compra.TipoDoProduto</td>
-                <td>@compra.ValorUnitarioDoProduto</td>
-                <td>@compra.ValorTotal</td>
-                <td>@compra.NumeroNotaFiscalProduto</td>
-                <td>@compra.CodigoEAN</td>
-                <td>
-                    <a asp-action="EditarCompra" asp-route-id="@compra.Id">Editar</a> |
-                    <a asp-action="DeletarCompra" asp-route-id="@compra.Id">Excluir</a>
-                </td>
+                <th>Id</th>
+                <th>Nome do Produto</th>
+                <th>Código da Solicitação</th>
+                <th>Fabricante</th>
+                <th>Quantidade Solicitada</th>
+                <th>Departamento Solicitante</th>
+                <th>Data Solicitada</th>
+                <th>Data Previsão de Entrega</th>
+                <th>Tipo do Produto</th>
+                <th>Valor Unitário</th>
+                <th>Valor Total</th>
+                <th>Número Nota Fiscal</th>
+                <th>Código EAN</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var compra in Model)
+            {
+                <tr>
+                    <td>@compra.Id</td>
+                    <td>@compra.NomeProduto</td>
+                    <td>@compra.CodigoDaSolicitacao</td>
+                    <td>@compra.Fabricante</td>
+                    <td>@compra.QuantidadeSolicitada</td>
+                    <td>@compra.DepartamentoSolicitante</td>
+                    <td>@compra.DataSolicitada.ToShortDateString()</td>
+                    <td>@compra.DataPrevisaoEntregaProduto.ToShortDateString()</td>
+                    <td>@compra.TipoDoProduto</td>
+                    <td>@compra.ValorUnitarioDoProduto</td>
+                    <td>@compra.ValorTotal</td>
+                    <td>@compra.NumeroNotaFiscalProduto</td>
+                    <td>@compra.CodigoEAN</td>
+                    <td>
+                        <a asp-action="EditarCompra" asp-route-id="@compra.Id">Editar</a> |
+                        <a asp-action="DeletarCompra" asp-route-id="@compra.Id" onclick="return confirm('Tem certeza de que deseja excluir esta compra?')">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Nenhum compra encontrada.</p>
+}
+@section Scripts {
+    <script>
+        $('#table-usuarios').DataTable({
+            "ordering": true,
+            "paging": true,
+            "searching": true,
+            "pageLength": 10,
+            "info": false,
+            "lengthChange": false,
+            "dom": 'lrtip',
+            "oLanguage": {
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLoadingRecords": "Carregando...",
+                "sProcessing": "Processando...",
+                "sSearch": "Pesquisa",
+                "sZeroRecords": "Nenhum registro encontrado",
+                "oPaginate": {
+                    "sNext": "Próximo",
+                    "sPrevious": "Anterior",
+                    "sFirst": "Primeiro",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Ordenar colunas de forma ascendente",
+                    "sSortDescending": ": Ordenar colunas de forma descendente"
+                }
+            }
+        });
+
+        var oTable = $('#table-usuarios').DataTable();
+        $('#buscador').on("input", function () {
+            oTable.search($(this).val()).draw();
+        });
+        $(document).ready(function () {
+            // Ocultar mensagens temporárias após 2 segundos
+            $(".mensagem-temporaria").delay(2000).fadeOut("slow");
+        });
+    </script>
+}

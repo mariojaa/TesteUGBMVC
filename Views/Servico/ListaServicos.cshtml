@@ -2,16 +2,16 @@
 
 <h1 class="text-center display-4">Lista de Serviços</h1>
 
-@if (TempData["MensagemSucesso"] != null)
+@if (TempData.Peek("MensagemSucesso") != null)
 {
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success mensagem-temporaria" role="alert">
         @TempData["MensagemSucesso"]
     </div>
 }
 
-@if (TempData["MensagemErro"] != null)
+@if (TempData.Peek("MensagemErro") != null)
 {
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-danger mensagem-temporaria" role="alert">
         @TempData["MensagemErro"]
     </div>
 }
@@ -51,16 +51,6 @@
             }
         </tbody>
     </table>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div id="conteudomodal"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 }
 else
 {
@@ -70,14 +60,7 @@ else
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".btnDeletar").click(function () {
-                var id = $(this).data("value");
-                $("#conteudomodal").load("/Servico/DeletarServico/" + id,
-                    function () {
-                        $('#exampleModal').modal("show");
-                    }
-                );
-            });
+
 
             $('#table-servicos').DataTable({
                 "ordering": true,
@@ -110,6 +93,10 @@ else
             var oTable = $('#table-servicos').DataTable();
             $('#buscador').on("input", function () {
                 oTable.search($(this).val()).draw();
+            });
+            $(document).ready(function () {
+                // Ocultar mensagens temporárias após 2 segundos
+                $(".mensagem-temporaria").delay(2000).fadeOut("slow");
             });
         });
     </script>

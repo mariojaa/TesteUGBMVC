@@ -2,16 +2,16 @@
 
 <h1 class="text-center display-4">Lista de Fornecedores</h1>
 
-@if (TempData["MensagemSucesso"] != null)
+@if (TempData.Peek("MensagemSucesso") != null)
 {
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success mensagem-temporaria" role="alert">
         @TempData["MensagemSucesso"]
     </div>
 }
 
-@if (TempData["MensagemErro"] != null)
+@if (TempData.Peek("MensagemErro") != null)
 {
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-danger mensagem-temporaria" role="alert">
         @TempData["MensagemErro"]
     </div>
 }
@@ -119,6 +119,10 @@ else
             var oTable = $('#table-fornecedores').DataTable();
             $('#buscador').on("input", function () {
                 oTable.search($(this).val()).draw();
+            });
+            $(document).ready(function () {
+                // Ocultar mensagens temporárias após 2 segundos
+                $(".mensagem-temporaria").delay(2000).fadeOut("slow");
             });
         });
     </script>

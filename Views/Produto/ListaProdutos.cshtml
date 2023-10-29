@@ -6,6 +6,22 @@
 }
 
 <h2>Lista de Produtos</h2>
+@if (TempData.Peek("MensagemSucesso") != null)
+{
+    <div class="alert alert-success mensagem-temporaria" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+@if (TempData.Peek("MensagemErro") != null)
+{
+    <div class="alert alert-danger mensagem-temporaria" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+<div class="container mt-3">
+    <input class="form-control" id="buscador" type="search" placeholder="Buscar..." aria-controls="table-fornecedores">
+</div>
 
 <p>
     <a asp-controller="Produto" asp-action="CriarProduto">Novo Produto</a>
@@ -37,3 +53,45 @@
         }
     </tbody>
 </table>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#table-fornecedores').DataTable({
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "pageLength": 10,
+                "info": false,
+                "lengthChange": false,
+                "dom": 'lrtip',
+                "oLanguage": {
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sSearch": "Pesquisa",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                }
+            });
+
+            var oTable = $('#table-fornecedores').DataTable();
+            $('#buscador').on("input", function () {
+                oTable.search($(this).val()).draw();
+            });
+            $(document).ready(function () {
+                // Ocultar mensagens temporárias após 2 segundos
+                $(".mensagem-temporaria").delay(2000).fadeOut("slow");
+            });
+        });
+    </script>
+}
