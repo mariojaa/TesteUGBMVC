@@ -126,7 +126,7 @@ namespace TesteUGBMVC.Controllers
 
             return RedirectToAction("ListaCompras");
         }
-        [HttpGet]
+        [HttpGet("EditarCompra/{id}")]
         public async Task<IActionResult> EditarCompra(int id)
         {
             try
@@ -152,7 +152,7 @@ namespace TesteUGBMVC.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("EditarCompra")]
         public async Task<IActionResult> EditarCompra(ComprasViewModel compraEditada)
         {
             if (ModelState.IsValid)
