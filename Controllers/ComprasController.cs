@@ -126,7 +126,6 @@ namespace TesteUGBMVC.Controllers
 
             return RedirectToAction("ListaCompras");
         }
-
         [HttpGet]
         public async Task<IActionResult> EditarCompra(int id)
         {
@@ -142,69 +141,65 @@ namespace TesteUGBMVC.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Erro ao obter a compra da API.");
-                    return View(); // Certifique-se de que a view está corretamente configurada
+                    ModelState.AddModelError("", "Erro ao obter o usuário da API.");
+                    return View();
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao obter a compra: " + ex.Message);
+                ModelState.AddModelError("", "Erro ao obter o usuário: " + ex.Message);
                 return View();
             }
         }
 
-
         [HttpPost]
-        [ValidateAntiForgeryToken] // Adicionar validação contra CSRF
-        public async Task<IActionResult> EditarCompra([Bind("Id, NomeProduto, CodigoDaSolicitacao, Fabricante, QuantidadeSolicitada, DepartamentoSolicitante, DataSolicitada, DataPrevisaoEntregaProduto, TipoDoProduto, ValorUnitarioDoProduto, NumeroNotaFiscalProduto, CodigoEAN")] ComprasViewModel compraEditada)
+        public async Task<IActionResult> EditarCompra(ComprasViewModel compraEditada)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(compraEditada);
-            }
-
-            try
-            {
-                var compraModel = new ComprasModel
+                try
                 {
-                    Id = compraEditada.Id,
-                    NomeProduto = compraEditada.NomeProduto,
-                    CodigoDaSolicitacao = compraEditada.CodigoDaSolicitacao,
-                    Fabricante = compraEditada.Fabricante,
-                    QuantidadeSolicitada = compraEditada.QuantidadeSolicitada,
-                    DepartamentoSolicitante = compraEditada.DepartamentoSolicitante,
-                    DataSolicitada = compraEditada.DataSolicitada,
-                    DataPrevisaoEntregaProduto = compraEditada.DataPrevisaoEntregaProduto,
-                    TipoDoProduto = compraEditada.TipoDoProduto,
-                    ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto,
-                    NumeroNotaFiscalProduto = compraEditada.NumeroNotaFiscalProduto,
-                    CodigoEAN = compraEditada.CodigoEAN
-                };
+                    var compraModel = new ComprasModel
+                    {
+                        Id = compraEditada.Id,
+                        NomeProduto = compraEditada.NomeProduto,
+                        CodigoDaSolicitacao = compraEditada.CodigoDaSolicitacao,
+                        Fabricante = compraEditada.Fabricante,
+                        QuantidadeSolicitada = compraEditada.QuantidadeSolicitada,
+                        DepartamentoSolicitante = compraEditada.DepartamentoSolicitante,
+                        DataSolicitada = compraEditada.DataSolicitada,
+                        DataPrevisaoEntregaProduto = compraEditada.DataPrevisaoEntregaProduto,
+                        TipoDoProduto = compraEditada.TipoDoProduto,
+                        ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto,
+                        NumeroNotaFiscalProduto = compraEditada.NumeroNotaFiscalProduto,
+                        CodigoEAN = compraEditada.CodigoEAN
+                    };
 
-                var usuarioJson = JsonConvert.SerializeObject(compraModel);
+                    var compraJson = JsonConvert.SerializeObject(compraModel);
 
-                // Certifique-se de que o httpClient está configurado corretamente, incluindo a URL base e cabeçalhos
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var content = new StringContent(usuarioJson, Encoding.UTF8, "application/json");
+                    var content = new StringContent(compraJson, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{compraModel.Id}", content);
+                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{compraModel.Id}", content);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["MensagemSucesso"] = "Compra editada com sucesso!";
-                    return RedirectToAction("ListaCompras");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["MensagemSucesso"] = "Compra editada com sucesso!";
+                        return RedirectToAction("ListaUsuarios");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Erro ao editar a compra na API.");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Erro ao editar a compra na API.");
+                    ModelState.AddModelError("", "Erro ao editar o usuário: " + ex.Message);
                 }
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Erro ao editar a compra: " + ex.Message);
-            }
+
             return View(compraEditada);
         }
-
     }
 }
