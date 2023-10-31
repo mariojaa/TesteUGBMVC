@@ -76,7 +76,7 @@ namespace TesteUGBMVC.Controllers
                         DataSolicitada = novaCompra.DataSolicitada,
                         DataPrevisaoEntregaProduto = novaCompra.DataPrevisaoEntregaProduto,
                         TipoDoProduto = novaCompra.TipoDoProduto,
-                        ValorUnitarioDoProduto = novaCompra.ValorUnitarioDoProduto,
+                        ValorUnitarioDoProduto = double.Parse(novaCompra.ValorUnitarioDoProduto.ToString("F2")),
                         NumeroNotaFiscalProduto = novaCompra.NumeroNotaFiscalProduto,
                         CodigoEAN = novaCompra.CodigoEAN
                     };
@@ -214,7 +214,7 @@ namespace TesteUGBMVC.Controllers
                         DataSolicitada = compraEditada.DataSolicitada,
                         DataPrevisaoEntregaProduto = compraEditada.DataPrevisaoEntregaProduto,
                         TipoDoProduto = compraEditada.TipoDoProduto,
-                        ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto,
+                        ValorUnitarioDoProduto = double.Parse(compraEditada.ValorUnitarioDoProduto.ToString("F2")),
                         NumeroNotaFiscalProduto = compraEditada.NumeroNotaFiscalProduto,
                         CodigoEAN = compraEditada.CodigoEAN
                     };
