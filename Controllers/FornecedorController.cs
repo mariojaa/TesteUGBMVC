@@ -96,29 +96,30 @@ namespace TesteUGBMVC.Controllers
             return View(novoFornecedor);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DeletarFornecedor(int id)
-        {
-            try
-            {
-                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
+        //[HttpGet("DeletarFornecedor/{id}")]
+        //public async Task<IActionResult> DeletarFornecedor(int id)
+        //{
+        //    try
+        //    {
+        //        HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["MensagemSucesso"] = "Fornecedor excluído com sucesso!";
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Erro ao excluir o fornecedor na API.");
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                ModelState.AddModelError("", "Erro ao excluir o fornecedor: " + ex.Message);
-            }
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            TempData["MensagemSucesso"] = "fornecedor excluído com sucesso!";
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("", "Erro ao excluir o fornecedor na API.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError("", "Erro ao excluir o fornecedor: " + ex.Message);
+        //    }
 
-            return RedirectToAction("ListaFornecedores");
-        }
+        //    return RedirectToAction("ListaFornecedores");
+        //}
+
 
         [HttpGet]
         public async Task<IActionResult> EditarFornecedor(int id)

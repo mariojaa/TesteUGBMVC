@@ -1,8 +1,13 @@
 ﻿@model TesteUGBMVC.Models.FornecedorViewModel
 
-<h3 class="display-5 text-center">Deseja realmente excluir a Empresa <b>@Model.NomeEmpresaFornecedora</b>?</h3>
-<br />
-<form method="post" asp-controller="Fornecedor" asp-action="DeletarFornecedor" asp-route-id="@Model.Id">
-    <button type="submit" class="btn btn-danger btn-block">Confirmar</button>
-    <a class="btn btn-primary btn-block" asp-controller="Fornecedor" asp-action="ListaFornecedores">Cancelar</a>
+<h2>Confirmar Exclusão</h2>
+
+<p>Tem certeza de que deseja excluir o Fornecedor @Model.NomeEmpresaFornecedora?</p>
+
+<form asp-action="DeletarFornecedor">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Confirmar Exclusão" class="btn btn-danger" />
+        <a asp-action="ListaFornecedores" class="btn btn-primary">Cancelar</a>
+    </div>
 </form>

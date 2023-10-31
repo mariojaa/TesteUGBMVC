@@ -52,22 +52,13 @@
                     <td>@item.InscricaoEstadualEMunicipalFornecedor</td>
                     <td class="align-items-baseline">
                         <a title="Editar" class="btnEditar" asp-route-id="@item.Id" asp-controller="Fornecedor" asp-action="EditarFornecedor">Editar</a>
-                        <a href="#" class="btnDeletar" data-value="@item.Id" title="Excluir">Excluir</a>
+                        @*fornecedor não deletando (releacionamento)*@
+                        @*<a asp-action="DeletarFornecedor" asp-route-id="@item.Id" onclick="return confirm('Tem certeza de que deseja excluir este fornecedor?')">Excluir</a>*@
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div id="conteudomodal"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 }
 else
 {
@@ -79,14 +70,6 @@ else
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".btnDeletar").click(function () {
-                var id = $(this).data("value");
-                $("#conteudomodal").load("/Fornecedor/DeletarFornecedor/" + id,
-                    function () {
-                        $('#exampleModal').modal("show");
-                    }
-                );
-            });
 
             $('#table-fornecedores').DataTable({
                 "ordering": true,

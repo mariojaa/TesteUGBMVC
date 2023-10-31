@@ -92,6 +92,7 @@ namespace TesteUGBMVC.Controllers
             return View(novoProduto);
         }
 
+        [HttpGet("DeletarProduto/{id}")]
         public async Task<IActionResult> DeletarProduto(int id)
         {
             try
@@ -104,12 +105,12 @@ namespace TesteUGBMVC.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Erro ao excluir o produto na API.");
+                    ModelState.AddModelError("", "Erro ao excluir o Produto na API.");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao excluir o produto: " + ex.Message);
+                ModelState.AddModelError("", "Erro ao excluir o Produto: " + ex.Message);
             }
 
             return RedirectToAction("ListaProdutos");
