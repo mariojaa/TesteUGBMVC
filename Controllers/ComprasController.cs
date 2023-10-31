@@ -9,6 +9,8 @@ using TesteUGB.Repository.Interface;
 using TesteUGBMVC.Models;
 using System.Globalization; // Adicione esta importação para trabalhar com valores monetários
 using TesteUGBMVC.ViewModels;
+using System.Net.Mail;
+using System.Net;
 
 namespace TesteUGBMVC.Controllers
 {
@@ -57,10 +59,62 @@ namespace TesteUGBMVC.Controllers
             return View();
         }
 
+        //[HttpPost("CriarCompra")]
+        //public async Task<IActionResult> CriarCompra(ComprasViewModel novaCompra, UsuarioModel usuarioViewModel)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            var compraModel = new ComprasModel
+        //            {
+        //                NomeProduto = novaCompra.NomeProduto,
+        //                CodigoDaSolicitacao = novaCompra.CodigoDaSolicitacao,
+        //                Fabricante = novaCompra.Fabricante,
+        //                QuantidadeSolicitada = novaCompra.QuantidadeSolicitada,
+        //                DepartamentoSolicitante = novaCompra.DepartamentoSolicitante,
+        //                DataSolicitada = novaCompra.DataSolicitada,
+        //                DataPrevisaoEntregaProduto = novaCompra.DataPrevisaoEntregaProduto,
+        //                TipoDoProduto = novaCompra.TipoDoProduto,
+        //                ValorUnitarioDoProduto = novaCompra.ValorUnitarioDoProduto,
+        //                NumeroNotaFiscalProduto = novaCompra.NumeroNotaFiscalProduto,
+        //                CodigoEAN = novaCompra.CodigoEAN
+        //            };
+
+        //            var novaCompraJson = JsonConvert.SerializeObject(compraModel);
+
+        //            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        //            var content = new StringContent(novaCompraJson, Encoding.UTF8, "application/json");
+
+        //           /* UsuarioModel usuario = await _usuarioRepository.BuscarPorEmailELogin(usuarioViewModel.EmailUsuario, usuarioViewModel.UsuarioLogin)*/;
+
+        //            HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
+        //            //string mensagemEmail = "Você tem uma nova solicitação de compra!";
+        //            //bool emailEnviado = _email.EnviarEmail(usuario.EmailUsuario, "Novo Pedido de Compra", mensagemEmail);
+
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                TempData["MensagemSucesso"] = "Compra cadastrada com sucesso!";
+        //                return RedirectToAction("ListaCompras");
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError("", "Erro ao criar a compra na API.");
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ModelState.AddModelError("", "Erro ao criar a compra: " + ex.Message);
+        //        }
+        //    }
+
+        //    return View(novaCompra);
+        //}
         [HttpPost("CriarCompra")]
-        public async Task<IActionResult> CriarCompra(ComprasViewModel novaCompra, UsuarioModel usuarioViewModel)
+        public async Task<IActionResult> CriarCompra(ComprasViewModel novaCompra)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -85,15 +139,23 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(novaCompraJson, Encoding.UTF8, "application/json");
 
-                   /* UsuarioModel usuario = await _usuarioRepository.BuscarPorEmailELogin(usuarioViewModel.EmailUsuario, usuarioViewModel.UsuarioLogin)*/;
-
                     HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
-                    //string mensagemEmail = "Você tem uma nova solicitação de compra!";
-                    //bool emailEnviado = _email.EnviarEmail(usuario.EmailUsuario, "Novo Pedido de Compra", mensagemEmail);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        TempData["MensagemSucesso"] = "Compra cadastrada com sucesso!";
+                        // Enviar um email de notificação apenas para o destinatário
+                        string mensagemEmail = "Você tem uma nova solicitação de compra!";
+                        bool emailEnviado = EnviarEmail("mario.araujo@ugb.edu.br", "Novo Pedido de Compra", mensagemEmail);
+
+                        if (emailEnviado)
+                        {
+                            TempData["MensagemSucesso"] = "Compra cadastrada com sucesso e email enviado!";
+                        }
+                        else
+                        {
+                            TempData["MensagemSucesso"] = "Compra cadastrada com sucesso, mas houve um erro ao enviar o email.";
+                        }
+
                         return RedirectToAction("ListaCompras");
                     }
                     else
@@ -109,6 +171,36 @@ namespace TesteUGBMVC.Controllers
 
             return View(novaCompra);
         }
+
+        private bool EnviarEmail(string destinatario, string assunto, string corpo)
+        {
+            try
+            {
+                var smtpClient = new SmtpClient("smtp.office365.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("azarroide@hotmail.com", "mario*Band346"),
+                    EnableSsl = true,
+                };
+
+                var message = new MailMessage("azarroide@hotmail.com", destinatario)
+                {
+                    Subject = assunto,
+                    Body = corpo,
+                    IsBodyHtml = true,
+                };
+
+                smtpClient.Send(message);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Lidar com erros de envio de email, por exemplo, registrando em um arquivo de log
+                return false;
+            }
+        }
+
+
 
         [HttpGet("DeletarCompra/{id}")]
         public async Task<IActionResult> DeletarCompra(int id)
