@@ -58,7 +58,7 @@ namespace TesteUGBMVC.Controllers
                     var fornecedorModel = new FornecedorModel
                     {
                         NomeEmpresaFornecedora = novoFornecedor.NomeEmpresaFornecedora,
-                        EnderecoFornecedor = novoFornecedor.EnderecoFornecedor, // Corrigido aqui
+                        EnderecoFornecedor = novoFornecedor.EnderecoFornecedor,
                         NumeroEnderecoFornecedor = novoFornecedor.NumeroEnderecoFornecedor,
                         BairroEnderecoFornecedor = novoFornecedor.BairroEnderecoFornecedor,
                         CidadeEnderecoFornecedor = novoFornecedor.CidadeEnderecoFornecedor,
@@ -87,7 +87,7 @@ namespace TesteUGBMVC.Controllers
                         ModelState.AddModelError("", "Erro ao criar o fornecedor na API.");
                     }
                 }
-                catch (HttpRequestException ex) // Corrigido aqui
+                catch (HttpRequestException ex)
                 {
                     ModelState.AddModelError("", "Erro ao criar o fornecedor: " + ex.Message);
                 }

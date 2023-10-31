@@ -1,0 +1,35 @@
+﻿@*@model UsuarioViewModel
+
+<div class="container">
+    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@Model.UsuarioLogin</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+        <ul class="navbar-nav flex-grow-1">
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+
+            @if(Model.Perfil == TesteUGB.Models.Enum.PerfilEnum.Administrador)
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Fornecedor" asp-action="CriarFornecedor">Criar Fornecedor</a>
+                </li>
+            }
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="CriarCompra">Criar Compras</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Estoque" asp-action="ListaProdutos">Estoque</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="AlterarSenha" asp-action="Index">Alterar Senha</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Sair">Sair</a>
+            </li>
+        </ul>
+    </div>
+</div>*@

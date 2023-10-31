@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using TesteUGB.Models;
 using TesteUGB.Repositories;
+using TesteUGB.Repositorio;
+using TesteUGB.Repository.Interface;
 using TesteUGBMVC.Models;
+using System.Globalization; // Adicione esta importação para trabalhar com valores monetários
 using TesteUGBMVC.ViewModels;
 
 namespace TesteUGBMVC.Controllers
@@ -19,14 +18,18 @@ namespace TesteUGBMVC.Controllers
         private readonly string API_ENDPOINT = "http://localhost:9038/api/compras";
         private readonly HttpClient httpClient;
         private readonly ComprasRepository _comprasRepository;
+        private readonly IEmail _email;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public ComprasController(ComprasRepository comprasRepository)
+        public ComprasController(ComprasRepository comprasRepository, IEmail email, IUsuarioRepository usuarioRepository)
         {
             httpClient = new HttpClient
             {
                 BaseAddress = new Uri(API_ENDPOINT)
             };
             _comprasRepository = comprasRepository;
+            _email = email;
+            _usuarioRepository = usuarioRepository;
         }
 
         [HttpGet("ListaCompras")]
@@ -55,9 +58,9 @@ namespace TesteUGBMVC.Controllers
         }
 
         [HttpPost("CriarCompra")]
-        public async Task<IActionResult> CriarCompra(ComprasViewModel novaCompra)
+        public async Task<IActionResult> CriarCompra(ComprasViewModel novaCompra, UsuarioModel usuarioViewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {
@@ -82,7 +85,11 @@ namespace TesteUGBMVC.Controllers
 
                     var content = new StringContent(novaCompraJson, Encoding.UTF8, "application/json");
 
+                   /* UsuarioModel usuario = await _usuarioRepository.BuscarPorEmailELogin(usuarioViewModel.EmailUsuario, usuarioViewModel.UsuarioLogin)*/;
+
                     HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
+                    //string mensagemEmail = "Você tem uma nova solicitação de compra!";
+                    //bool emailEnviado = _email.EnviarEmail(usuario.EmailUsuario, "Novo Pedido de Compra", mensagemEmail);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -126,6 +133,7 @@ namespace TesteUGBMVC.Controllers
 
             return RedirectToAction("ListaCompras");
         }
+
         [HttpGet("EditarCompra/{id}")]
         public async Task<IActionResult> EditarCompra(int id)
         {
@@ -136,23 +144,23 @@ namespace TesteUGBMVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    var compraModel = JsonConvert.DeserializeObject<ComprasViewModel>(content);
-                    return View(compraModel);
+                    var produtoModel = JsonConvert.DeserializeObject<ComprasViewModel>(content);
+                    return View(produtoModel);
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Erro ao obter o usuário da API.");
+                    ModelState.AddModelError("", "Erro ao obter a compra da API.");
                     return View();
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao obter o usuário: " + ex.Message);
+                ModelState.AddModelError("", "Erro ao obter a compra: " + ex.Message);
                 return View();
             }
         }
 
-        [HttpPost("EditarCompra")]
+        [HttpPost("EditarCompra/{id}")]
         public async Task<IActionResult> EditarCompra(ComprasViewModel compraEditada)
         {
             if (ModelState.IsValid)
@@ -170,23 +178,25 @@ namespace TesteUGBMVC.Controllers
                         DataSolicitada = compraEditada.DataSolicitada,
                         DataPrevisaoEntregaProduto = compraEditada.DataPrevisaoEntregaProduto,
                         TipoDoProduto = compraEditada.TipoDoProduto,
-                        ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto,
+                        ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto, //cultureinfo
+                        ValorTotal = compraEditada.ValorTotal, //cultoreinfo
                         NumeroNotaFiscalProduto = compraEditada.NumeroNotaFiscalProduto,
                         CodigoEAN = compraEditada.CodigoEAN
+                        
                     };
 
-                    var compraJson = JsonConvert.SerializeObject(compraModel);
+                    var produtoJson = JsonConvert.SerializeObject(compraModel);
 
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var content = new StringContent(compraJson, Encoding.UTF8, "application/json");
+                    var content = new StringContent(produtoJson, Encoding.UTF8, "application/json");
 
                     HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{compraModel.Id}", content);
 
                     if (response.IsSuccessStatusCode)
                     {
                         TempData["MensagemSucesso"] = "Compra editada com sucesso!";
-                        return RedirectToAction("ListaUsuarios");
+                        return RedirectToAction("ListaCompras");
                     }
                     else
                     {
@@ -195,10 +205,9 @@ namespace TesteUGBMVC.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Erro ao editar o usuário: " + ex.Message);
+                    ModelState.AddModelError("", "Erro ao editar a compra: " + ex.Message);
                 }
             }
-
             return View(compraEditada);
         }
     }

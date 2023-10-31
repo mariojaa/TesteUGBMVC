@@ -1,0 +1,78 @@
+﻿@*@model LoginViewModel
+@{
+    Layout = "_layoutDeslogado";
+    ViewData["Title"] = "Login";
+}
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<div id="login" class="container">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="login well well-small">
+                <form class="login-form" id="UserLoginForm" asp-controller="Login" asp-action="Entrar" method="post">
+                    <div class="control-group">
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-user"></i></span>
+                            <input id="UserUsername" asp-for="Login" type="text" class="form-control" placeholder="Usuário" autofocus required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-lock"></i></span>
+                            <input id="UserPassword" asp-for="Senha" type="password" class="form-control" value="" placeholder="Senha" autofocus required>
+                        </div>
+                    </div>
+                    <div class="text-center fs-6">
+                        <a asp-action="RedefinirSenha" asp-controller="Login">Esqueceu a senha?</a> ou <a asp-action="CriarNovoUsuarioDeslogado" asp-controller="CriarNovoUsuario">Crie uma Conta!</a>
+                    </div>
+                    <div class="control-group">
+                        <p class="submit"><input type="submit" name="commit" value="Login"></p>
+                    </div>
+                </form>
+            </div><!--/.login-->
+        </div><!--/.span12-->
+    </div><!--/.row-fluid-->
+</div><!--/.container-->
+@section Scripts{
+    <script type="text/javascript">
+
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('keyup', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+
+
+    </script>
+}
+
+*@

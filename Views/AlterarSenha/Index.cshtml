@@ -1,0 +1,66 @@
+﻿@*@using TesteUGBMVC.Models.Enum;
+@model AlterarSenhaViewModel
+@{
+    ViewData["title"] = "Alterar Senha do Usuário";
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+<div class="login">
+    <h1>Alterar Senha</h1>
+    <form class="needs-validation" method="post" asp-controller="AlterarSenha" asp-action="Alterar" novalidate>
+
+        <p><input id="ValidationTextarea" asp-for="SenhaAtual" type="password" class="form-control" value="" placeholder="Senha Atual" autofocus required></p>
+        <span asp-validation-for="SenhaAtual" class="text-danger"></span>
+
+        <p><input id="ValidationTextarea" asp-for="NovaSenha" type="password" class="form-control" value="" placeholder="Nova Senha" autofocus required></p>
+        <span asp-validation-for="NovaSenha" class="text-danger"></span>
+
+        <p><input id="ValidationTextarea" asp-for="ConfirmarNovaSenha" type="password" class="form-control" value="" placeholder="Confirmar Nova Senha" autofocus required></p>
+        <span asp-validation-for="ConfirmarNovaSenha" class="text-danger"></span>
+        <br />
+        <div class="text-center fs-6">
+            <input type='submit' value='Voltar' asp-controller="Contato" asp-action="ListaContatos">
+            <input class="submit" type="submit" name="commit" value="Alterar">
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('keyup', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+    </script>
+    }
+*@

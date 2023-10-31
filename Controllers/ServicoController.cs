@@ -2,14 +2,9 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using TesteUGB.Data;
-using TesteUGB.Models;
 using TesteUGB.Repositorio;
 using TesteUGBMVC.Models;
 
@@ -131,9 +126,8 @@ namespace TesteUGBMVC.Controllers
             return View(novoServico);
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> DeletarServico(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
             try
             {
@@ -141,20 +135,43 @@ namespace TesteUGBMVC.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["MensagemSucesso"] = "Serviço excluído com sucesso!";
+                    TempData["MensagemSucesso"] = "Compra excluída com sucesso!";
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Erro ao excluir o serviço na API.");
+                    ModelState.AddModelError("", "Erro ao excluir a compra na API.");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao excluir o serviço: " + ex.Message);
+                ModelState.AddModelError("", "Erro ao excluir a compra: " + ex.Message);
             }
 
-            return RedirectToAction("ListaServicos");
+            return RedirectToAction("ListaCompras");
         }
+        //[HttpGet]
+        //public async Task<IActionResult> DeletarServico(int id)
+        //{
+        //    try
+        //    {
+        //        HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            TempData["MensagemSucesso"] = "Serviço excluído com sucesso!";
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("", "Erro ao excluir o serviço na API.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError("", "Erro ao excluir o serviço: " + ex.Message);
+        //    }
+
+        //    return RedirectToAction("ListaServicos");
+        //}
 
         [HttpGet]
         public async Task<IActionResult> EditarServico(int id)
@@ -224,14 +241,9 @@ namespace TesteUGBMVC.Controllers
             return View(servicoEditado);
         }
 
-        //----------------------------------------------------------------------
         [HttpGet]
         public IActionResult SolicitarServico()
         {
-            // Aqui, você pode preparar os dados para exibir na View de solicitação de serviço.
-            // Certifique-se de que sua View esteja configurada para exibir as informações corretas, como serviços e fornecedores.
-
-            // Substitua a linha abaixo pela lógica real para obter serviços e fornecedores do banco de dados.
             var servicos = _context.Servicos.ToList();
             var fornecedores = _context.Fornecedores.ToList();
 
@@ -257,25 +269,18 @@ namespace TesteUGBMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Crie uma nova solicitação com base nos dados fornecidos.
                 var novaSolicitacao = new SolicitacaoServicoModel
                 {
                     ServicoId = solicitacao.ServicoId,
                     FornecedorId = solicitacao.FornecedorId,
-                    // Preencha outras propriedades da solicitação, se houver.
                 };
 
-                // Adicione a nova solicitação ao contexto do banco de dados.
                 _context.SolicitacoesServico.Add(novaSolicitacao);
-
-                // Salve as alterações no banco de dados.
                 _context.SaveChanges();
 
-                // Redirecione para a ação que lista as solicitações.
                 return RedirectToAction("ListaServicosSolicitados", new { fornecedorId = novaSolicitacao.FornecedorId, servicoId = novaSolicitacao.ServicoId });
             }
 
-            // Se a ModelState não for válida, retorne a View de SolicitarServiço com os erros.
             var servicos = _context.Servicos.ToList();
             var fornecedores = _context.Fornecedores.ToList();
 
@@ -304,7 +309,6 @@ namespace TesteUGBMVC.Controllers
             {
                 Servico = s.Servico,
                 Fornecedor = s.Fornecedor,
-                // Adicione outras propriedades aqui, se necessário.
             }).ToList();
 
             return View(viewModelList);

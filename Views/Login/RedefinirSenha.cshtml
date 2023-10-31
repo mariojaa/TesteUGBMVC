@@ -1,0 +1,66 @@
+﻿@*@model RedefinirSenhaViewModel
+
+@{
+    Layout = "_layoutDeslogado";
+    ViewData["Title"] = "Redefinir Senha";
+}
+
+<div class="panel panel-default formulario-login">
+    <div class="panel-body">
+        @if (TempData["MensagemErro"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["MensagemErro"]
+            </div>
+        }
+        @if (TempData["MensagemSucesso"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["MensagemSucesso"]
+            </div>
+        }
+
+        <div class="login text-center">
+            <h1>Redefinir Senha</h1>
+            <form class="needs-validation" asp-controller="Login" asp-action="EnviarLinkRedefinirSenha" method="post" novalidate>
+                <p><input id="ValidationTextarea" asp-for="LoginId" type="text" class="form-control" placeholder="Usuário" autofocus required></p>
+                <span asp-validation-for="LoginId" class="text-danger"></span>
+
+                <p><input id="Email" asp-for="Email" type="email" class="form-control" placeholder="Email" autofocus required></p>
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <br />
+                <div class="text-center fs-6">
+                    <input type='submit' value='Voltar' asp-controller="Login" asp-action="Index">
+                    <input class="submit" type="submit" name="commit" value="Redefinir">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('keyup', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+    </script>
+    }
+*@
