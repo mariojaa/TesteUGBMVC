@@ -5,8 +5,10 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 using TesteUGB.Data;
+using TesteUGB.Models;
 using TesteUGB.Repositorio;
 using TesteUGBMVC.Models;
+using TesteUGBMVC.ViewModels;
 
 namespace TesteUGBMVC.Controllers
 {
@@ -126,30 +128,7 @@ namespace TesteUGBMVC.Controllers
             return View(novoServico);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Deletar(int id)
-        {
-            try
-            {
-                HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["MensagemSucesso"] = "Compra excluída com sucesso!";
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Erro ao excluir a compra na API.");
-                }
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Erro ao excluir a compra: " + ex.Message);
-            }
-
-            return RedirectToAction("ListaCompras");
-        }
-        //[HttpGet]
+        //[HttpGet("DeletarServico/{id}")]
         //public async Task<IActionResult> DeletarServico(int id)
         //{
         //    try
@@ -183,8 +162,8 @@ namespace TesteUGBMVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    var servicoModel = JsonConvert.DeserializeObject<ServicoViewModel>(content);
-                    return View(servicoModel);
+                    var produtoModel = JsonConvert.DeserializeObject<ServicoViewModel>(content);
+                    return View(produtoModel);
                 }
                 else
                 {
@@ -199,47 +178,48 @@ namespace TesteUGBMVC.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditarServico(ServicoViewModel servicoEditado)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var servicoModel = new ServicoModel
-                    {
-                        Id = servicoEditado.Id,
-                        NomeDoServico = servicoEditado.NomeDoServico,
-                        DescricaoDoServico = servicoEditado.DescricaoDoServico,
-                        PrazoEntregaPadrao = servicoEditado.PrazoEntregaPadrao
-                    };
+        //[HttpPost]
+        //public async Task<IActionResult> EditarServico(ServicoViewModel servicoEditado)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            var servicoModel = new ServicoModel
+        //            {
 
-                    var servicoJson = JsonConvert.SerializeObject(servicoModel);
+        //                Id = servicoEditado.Id,
+        //                NomeDoServico = servicoEditado.NomeDoServico,
+        //                DescricaoDoServico = servicoEditado.DescricaoDoServico,
+        //                PrazoEntregaPadrao = servicoEditado.PrazoEntregaPadrao,
 
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //            };
 
-                    var content = new StringContent(servicoJson, Encoding.UTF8, "application/json");
+        //            var produtoJson = JsonConvert.SerializeObject(servicoModel);
 
-                    HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{servicoModel.Id}", content);
+        //            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        TempData["MensagemSucesso"] = "Serviço editado com sucesso!";
-                        return RedirectToAction("ListaServicos");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Erro ao editar o serviço na API.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Erro ao editar o serviço: " + ex.Message);
-                }
-            }
+        //            var content = new StringContent(produtoJson, Encoding.UTF8, "application/json");
 
-            return View(servicoEditado);
-        }
+        //            HttpResponseMessage response = await httpClient.PutAsync($"{API_ENDPOINT}/{servicoModel.Id}", content);
+
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                TempData["MensagemSucesso"] = "Produto editado com sucesso!";
+        //                return RedirectToAction("ListaProdutos");
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError("", "Erro ao editar o produto na API.");
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ModelState.AddModelError("", "Erro ao editar o produto: " + ex.Message);
+        //        }
+        //    }
+        //    return View(servicoEditado);
+        //}
 
         [HttpGet]
         public IActionResult SolicitarServico()
