@@ -7,10 +7,10 @@ using TesteUGB.Repositories;
 using TesteUGB.Repositorio;
 using TesteUGB.Repository.Interface;
 using TesteUGBMVC.Models;
-using System.Globalization; // Adicione esta importação para trabalhar com valores monetários
-using TesteUGBMVC.ViewModels;
 using System.Net.Mail;
 using System.Net;
+using System.Globalization;
+using System.Drawing;
 
 namespace TesteUGBMVC.Controllers
 {
@@ -59,58 +59,6 @@ namespace TesteUGBMVC.Controllers
             return View();
         }
 
-        //[HttpPost("CriarCompra")]
-        //public async Task<IActionResult> CriarCompra(ComprasViewModel novaCompra, UsuarioModel usuarioViewModel)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            var compraModel = new ComprasModel
-        //            {
-        //                NomeProduto = novaCompra.NomeProduto,
-        //                CodigoDaSolicitacao = novaCompra.CodigoDaSolicitacao,
-        //                Fabricante = novaCompra.Fabricante,
-        //                QuantidadeSolicitada = novaCompra.QuantidadeSolicitada,
-        //                DepartamentoSolicitante = novaCompra.DepartamentoSolicitante,
-        //                DataSolicitada = novaCompra.DataSolicitada,
-        //                DataPrevisaoEntregaProduto = novaCompra.DataPrevisaoEntregaProduto,
-        //                TipoDoProduto = novaCompra.TipoDoProduto,
-        //                ValorUnitarioDoProduto = novaCompra.ValorUnitarioDoProduto,
-        //                NumeroNotaFiscalProduto = novaCompra.NumeroNotaFiscalProduto,
-        //                CodigoEAN = novaCompra.CodigoEAN
-        //            };
-
-        //            var novaCompraJson = JsonConvert.SerializeObject(compraModel);
-
-        //            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        //            var content = new StringContent(novaCompraJson, Encoding.UTF8, "application/json");
-
-        //           /* UsuarioModel usuario = await _usuarioRepository.BuscarPorEmailELogin(usuarioViewModel.EmailUsuario, usuarioViewModel.UsuarioLogin)*/;
-
-        //            HttpResponseMessage response = await httpClient.PostAsync(API_ENDPOINT, content);
-        //            //string mensagemEmail = "Você tem uma nova solicitação de compra!";
-        //            //bool emailEnviado = _email.EnviarEmail(usuario.EmailUsuario, "Novo Pedido de Compra", mensagemEmail);
-
-        //            if (response.IsSuccessStatusCode)
-        //            {
-        //                TempData["MensagemSucesso"] = "Compra cadastrada com sucesso!";
-        //                return RedirectToAction("ListaCompras");
-        //            }
-        //            else
-        //            {
-        //                ModelState.AddModelError("", "Erro ao criar a compra na API.");
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            ModelState.AddModelError("", "Erro ao criar a compra: " + ex.Message);
-        //        }
-        //    }
-
-        //    return View(novaCompra);
-        //}
         [HttpPost("CriarCompra")]
         public async Task<IActionResult> CriarCompra(ComprasViewModel novaCompra)
         {
@@ -143,7 +91,6 @@ namespace TesteUGBMVC.Controllers
 
                     if (response.IsSuccessStatusCode)
                     {
-                        // Enviar um email de notificação apenas para o destinatário
                         string mensagemEmail = "Você tem uma nova solicitação de compra!";
                         bool emailEnviado = EnviarEmail("mario.araujo@ugb.edu.br", "Novo Pedido de Compra", mensagemEmail);
 
@@ -195,12 +142,9 @@ namespace TesteUGBMVC.Controllers
             }
             catch (Exception ex)
             {
-                // Lidar com erros de envio de email, por exemplo, registrando em um arquivo de log
                 return false;
             }
         }
-
-
 
         [HttpGet("DeletarCompra/{id}")]
         public async Task<IActionResult> DeletarCompra(int id)
@@ -270,11 +214,9 @@ namespace TesteUGBMVC.Controllers
                         DataSolicitada = compraEditada.DataSolicitada,
                         DataPrevisaoEntregaProduto = compraEditada.DataPrevisaoEntregaProduto,
                         TipoDoProduto = compraEditada.TipoDoProduto,
-                        ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto, //cultureinfo
-                        ValorTotal = compraEditada.ValorTotal, //cultoreinfo
+                        ValorUnitarioDoProduto = compraEditada.ValorUnitarioDoProduto,
                         NumeroNotaFiscalProduto = compraEditada.NumeroNotaFiscalProduto,
                         CodigoEAN = compraEditada.CodigoEAN
-                        
                     };
 
                     var produtoJson = JsonConvert.SerializeObject(compraModel);
@@ -302,5 +244,25 @@ namespace TesteUGBMVC.Controllers
             }
             return View(compraEditada);
         }
+
+        //[HttpPost("PdfPedido/{id}")]
+        //public async Task<IActionResult> PdfPedido(int id)
+        //{
+        //    var prova = await _comprasRepository.BuscarPedidoPorIdAsync(id);
+
+        //    if (prova == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    byte[] arquivoPDF = prova.Conteudo;
+
+        //    if (arquivoPDF == null || arquivoPDF.Length == 0)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return File(arquivoPDF, "application/pdf");
+        //}
     }
 }
