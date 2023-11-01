@@ -1,4 +1,5 @@
-﻿using TesteUGB.Models.Enum;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using TesteUGB.Models.Enum;
 
 namespace TesteUGBMVC.Models
 {

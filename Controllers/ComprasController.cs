@@ -9,8 +9,9 @@ using TesteUGB.Repository.Interface;
 using TesteUGBMVC.Models;
 using System.Net.Mail;
 using System.Net;
-using System.Globalization;
 using System.Drawing;
+using iTextSharp.text;
+using Aspose.Pdf.Text;
 
 namespace TesteUGBMVC.Controllers
 {
@@ -20,8 +21,6 @@ namespace TesteUGBMVC.Controllers
         private readonly string API_ENDPOINT = "http://localhost:9038/api/compras";
         private readonly HttpClient httpClient;
         private readonly ComprasRepository _comprasRepository;
-        private readonly IEmail _email;
-        private readonly IUsuarioRepository _usuarioRepository;
 
         public ComprasController(ComprasRepository comprasRepository, IEmail email, IUsuarioRepository usuarioRepository)
         {
@@ -30,8 +29,6 @@ namespace TesteUGBMVC.Controllers
                 BaseAddress = new Uri(API_ENDPOINT)
             };
             _comprasRepository = comprasRepository;
-            _email = email;
-            _usuarioRepository = usuarioRepository;
         }
 
         [HttpGet("ListaCompras")]
@@ -244,25 +241,5 @@ namespace TesteUGBMVC.Controllers
             }
             return View(compraEditada);
         }
-
-        //[HttpPost("PdfPedido/{id}")]
-        //public async Task<IActionResult> PdfPedido(int id)
-        //{
-        //    var prova = await _comprasRepository.BuscarPedidoPorIdAsync(id);
-
-        //    if (prova == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    byte[] arquivoPDF = prova.Conteudo;
-
-        //    if (arquivoPDF == null || arquivoPDF.Length == 0)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return File(arquivoPDF, "application/pdf");
-        //}
     }
 }
