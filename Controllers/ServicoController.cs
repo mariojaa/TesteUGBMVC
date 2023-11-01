@@ -2,13 +2,9 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using System.Text;
 using TesteUGB.Data;
-using TesteUGB.Models;
 using TesteUGB.Repositorio;
 using TesteUGBMVC.Models;
-using TesteUGBMVC.ViewModels;
 
 namespace TesteUGBMVC.Controllers
 {

@@ -9,9 +9,6 @@ using TesteUGB.Repository.Interface;
 using TesteUGBMVC.Models;
 using System.Net.Mail;
 using System.Net;
-using System.Drawing;
-using iTextSharp.text;
-using Aspose.Pdf.Text;
 
 namespace TesteUGBMVC.Controllers
 {

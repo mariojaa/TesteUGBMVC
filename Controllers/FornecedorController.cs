@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using TesteUGB.Models;
 using TesteUGBMVC.Models;
 
@@ -95,31 +91,6 @@ namespace TesteUGBMVC.Controllers
 
             return View(novoFornecedor);
         }
-
-        //[HttpGet("DeletarFornecedor/{id}")]
-        //public async Task<IActionResult> DeletarFornecedor(int id)
-        //{
-        //    try
-        //    {
-        //        HttpResponseMessage response = await httpClient.DeleteAsync($"{API_ENDPOINT}/{id}");
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            TempData["MensagemSucesso"] = "fornecedor excluído com sucesso!";
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError("", "Erro ao excluir o fornecedor na API.");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ModelState.AddModelError("", "Erro ao excluir o fornecedor: " + ex.Message);
-        //    }
-
-        //    return RedirectToAction("ListaFornecedores");
-        //}
-
 
         [HttpGet]
         public async Task<IActionResult> EditarFornecedor(int id)

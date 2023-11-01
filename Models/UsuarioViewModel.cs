@@ -10,7 +10,5 @@ namespace TesteUGBMVC.Models
         public string EmailUsuario { get; set; }
         public string UsuarioLogin { get; set; }
         public string DepartamentoFuncionario { get; set; }
-        //public string Senha { get; set; }
-        //public PerfilEnum Perfil { get; set; }
     }
 }
